@@ -10,16 +10,15 @@ Legend: **✅ done** · **⬜ your job** · **⚠️ known weakness**
 ## A. Content
 
 - [x] ✅ **Original content, written for this site** — 13 technique pages (345–535 words of unique
-      body copy each), 6 guides (455–758 words), FAQ (1,300 words), plus About, How it works,
+      body copy each), 10 guides, 9 situation landing pages, FAQ (1,300 words), plus About, How it works,
       For clinics, Accessibility. Nothing scraped, spun or templated.
 - [x] ✅ **No thin pages in the index** — every indexable route is substantial. The one thin surface,
       the session screen at `/breathe/*`, is `noindex` and excluded from the sitemap.
-- [x] ✅ **No placeholder or lorem text** — the only placeholder left (contact address) renders an
-      honest notice instead of pretending to work.
+- [x] ✅ **No placeholder content anywhere** — the contact address is real and live.
 - [x] ✅ **No fake testimonials, reviews, user counts, awards, partnerships or press mentions** —
       there are none anywhere, and `/about` says so explicitly.
-- [x] ✅ **No invented experts or borrowed medical authority** — `/about` states plainly that the
-      content has *not* been reviewed by a clinician.
+- [x] ✅ **Named, honest authorship** — written by M. Abubakar, who states plainly on `/about` that
+      he has no clinical qualifications and that nothing has been medically reviewed.
 - [x] ✅ **Claims are sourced** — 5 citations, each verified against the journal or PubMed record,
       each with an honest note on its limitations. See `src/lib/sources.ts`.
 - [x] ✅ **Sitewide internal linking** — zero orphan pages. `/techniques` referenced from 11 files,
@@ -41,9 +40,6 @@ All linked from the footer on every page.
 - [x] ✅ `/faq` — 14 real questions including the awkward ones
 - [x] ✅ **Sitewide footer disclaimer** — educational information only, not medical advice, not
       clinically reviewed, emergency guidance
-- [ ] ⬜ **Set a real contact email.** ← *the biggest single blocker.* Create the mailbox, then set
-      `NEXT_PUBLIC_CONTACT_EMAIL=hello@letsbreathein.fit`. Until then `/contact` tells visitors no
-      address is configured, which a reviewer will read as "no way to reach anyone".
 - [ ] ⬜ **Have the legal pages checked for your jurisdiction.** They are plain-English templates
       for a data-light static site, not legal advice.
 
@@ -82,7 +78,7 @@ All linked from the footer on every page.
 - [x] ✅ **`robots.txt`** — allows crawling, points at the sitemap. Deliberately does *not* block
       `/breathe/`: a blocked page can't be crawled to see its `noindex`, so it could be indexed
       contentless from links.
-- [x] ✅ **`sitemap.xml`** — all 32 indexable URLs, session screens excluded
+- [x] ✅ **`sitemap.xml`** — all 45 indexable URLs, session screens excluded
 - [x] ✅ **Structured data** — `WebSite`, `HowTo`, `Article`, `FAQPage`, `BreadcrumbList`. Nothing
       marked up that isn't visible on the page.
 - [x] ✅ **404 page** with full site chrome and three routes back in
@@ -93,7 +89,7 @@ All linked from the footer on every page.
       keyboard control, reduced-motion support, live regions
 - [ ] ⬜ **Deploy and remove GoDaddy's "Launching Soon" page.** Do not apply while it is up — a
       parked page is thin content.
-- [ ] ⬜ **301 `www` → apex**, or you have two crawlable copies of all 32 pages
+- [ ] ⬜ **301 `www` → apex**, or you have two crawlable copies of all 45 pages
 - [ ] ⬜ **Search Console**: add the property, submit the sitemap, wait for real indexing before
       applying
 
@@ -109,8 +105,8 @@ All linked from the footer on every page.
 - [x] ✅ **Unverifiable endorsements removed** — e.g. "used by the US Navy"
 - [ ] ⚠️ **No clinician review.** Declared openly, which is the right call, but it remains the
       single strongest improvement available for a health-adjacent site.
-- [ ] ⚠️ **Anonymous authorship.** Putting your name on `/about` costs nothing and converts
-      "anonymous health site" into "person who stands behind this".
+- [x] ✅ **Named author** — M. Abubakar, on `/about`, on every guide byline, and in `Person` schema.
+      No credentials are claimed, which is the honest position and a stronger one than implying some.
 
 ---
 
@@ -118,8 +114,6 @@ All linked from the footer on every page.
 
 1. `npm run build` passes locally
 2. Deploy to Vercel; GoDaddy holding page gone; www redirecting to apex
-3. Create the mailbox → set `NEXT_PUBLIC_CONTACT_EMAIL` → redeploy → confirm `/contact` shows the
-   address rather than the notice
 4. Search Console → submit sitemap → wait for a decent number of pages to be indexed
 5. Apply to AdSense
 6. On approval: set `NEXT_PUBLIC_ADSENSE_CLIENT` → redeploy → confirm `/ads.txt` returns a line and
@@ -131,7 +125,7 @@ All linked from the footer on every page.
 /sitemap.xml   → 32 URLs, all letsbreathein.fit
 /robots.txt    → allows all, references the sitemap
 /ads.txt       → 404 before approval, one google.com line after
-/contact       → a real address, not the "not configured" notice
+/contact       → broleymaverick@gmail.com is shown
 view-source    → canonical is letsbreathein.fit, not example.com
 www.…          → 301 to apex
 ```

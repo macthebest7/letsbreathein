@@ -9,7 +9,10 @@ import { SITE } from '@/lib/site';
 
 export const metadata: Metadata = {
   // 47 characters — the previous version ran to 69 and was cut off in results.
-  title: 'Breathe — free guided breathing exercises',
+  // `absolute` opts out of the layout's "%s | Breathe" template. Without it
+  // this rendered as "Breathe — free guided breathing exercises | Breathe" in
+  // the built HTML, with the brand twice.
+  title: { absolute: 'Breathe — free guided breathing exercises' },
   description:
     'Free guided breathing exercises with voice and sound. Box breathing, 4-7-8, coherent breathing and more, chosen by what you are dealing with.',
   alternates: { canonical: '/' },

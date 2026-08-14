@@ -1,18 +1,39 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SOURCES } from '@/lib/sources';
+import { AUTHOR, SITE } from '@/lib/site';
 import { breadcrumbLd } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'About Breathe',
+  // `absolute` because the title already contains the brand — without it the
+  // layout template appends it again and you get "About Breathe | Breathe".
+  title: { absolute: 'About Breathe' },
   description:
-    'Why Breathe exists, who it is for, how the content is written and checked, how the site stays free, and what it deliberately does not claim.',
+    'Who is behind this site, why it exists, how the content is written and checked, and what it deliberately refuses to claim.',
   alternates: { canonical: '/about' },
 };
 
 export default function AboutPage() {
+  /* Person, not Organization. There is a real name behind this now, and the
+     markup should say so — but with no credentials attached, because there
+     are none to attach. */
+  const personLd = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    mainEntity: {
+      '@type': 'Person',
+      name: AUTHOR.name,
+      description: AUTHOR.role,
+      url: `${SITE.url}/about`,
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -21,129 +42,142 @@ export default function AboutPage() {
       />
 
       <article className="wrap prose section">
-        <h1>About Breathe</h1>
+        <h1>About</h1>
         <p className="lede">
-          A free, ad-supported website that talks you through breathing exercises out loud, built so
-          it works with a screen reader, a keyboard, or your eyes closed.
+          My name is {AUTHOR.name}. There is no company behind this site, no team and no investors —
+          it is one person and a web page.
         </p>
 
-        <h2>Why it exists</h2>
+        <h2>Why I made it</h2>
         <p>
-          Most breathing apps want an account, a subscription, a download, and a fortnight of daily
-          streaks before they will help you. That is a strange amount of friction for something that
-          takes three minutes and has been free for the whole of human history.
+          Learning to breathe properly changed things for me. I want to be careful about how I say
+          that, because one person’s experience is not evidence and it does not tell you what will
+          happen to you. But it mattered enough that I kept circling back to the same question: why
+          did nobody ever tell me about this?
         </p>
         <p>
-          The other problem is accessibility. A calming tool that only works if you can watch a
-          moving circle is not a calming tool for everyone — and “close your eyes and relax” is
-          advice that most breathing apps quietly contradict by requiring you to look at them. If
-          you are blind, or you find movement uncomfortable, or you simply want to lie in the dark
-          with the screen off, the options are thin.
+          That is the part I still find strange. You breathe somewhere around twenty thousand times
+          a day. It is the one part of your nervous system you can take the controls of whenever you
+          want. It costs nothing, it needs no equipment, it is available in a meeting, on a bus, at
+          three in the morning — and almost nobody is ever shown what happens when you slow it down
+          on purpose.
         </p>
         <p>
-          So this is a single web page you open when you need it, that tells you what to do out
-          loud, and then gets out of the way.
+          Most people I have mentioned it to had simply never tried it. Not tried it and decided it
+          was not for them — never tried it at all. That gap is the entire reason this site exists.
         </p>
 
-        <h2>Who it is for</h2>
+        <h2>Why it is free</h2>
+        <p>
+          Because it should be. Breathing has been free for the whole of human history and it seems
+          absurd to put it behind a subscription, a sign-up form, or a fourteen-day trial that asks
+          for a card.
+        </p>
+        <p>
+          So there is no account, no login, no email capture and no paid tier. You open the page and
+          you breathe. If you never come back, that is fine — you have lost nothing and neither have
+          I.
+        </p>
+        <p>
+          The site is paid for by advertising on the article and guide pages, and on the screen
+          after a session ends. Never during the breathing itself, never as a pop-up, and never as
+          something you have to dismiss before you can start. If an ad ever gets in the way of the
+          actual exercise, that is a bug and I would like to know about it.
+        </p>
+
+        <h2>What I am not</h2>
+        <p>
+          I am not a doctor, a physiotherapist, a psychologist or a breathing coach. I have no
+          clinical qualifications whatsoever, and nothing on this site has been reviewed by anyone
+          who does.
+        </p>
+        <p>
+          I would rather say that plainly than let the design imply otherwise. Plenty of wellness
+          sites are vague about who wrote them precisely so you will assume someone qualified did.
+          You should read everything here knowing that a layman wrote it, carefully, from published
+          research — and check anything that matters with someone who can actually assess you.
+        </p>
+
+        <h2>How I write it, and how I check it</h2>
         <ul>
           <li>
-            People with an ordinary stressful job who want three minutes at their desk without
-            installing anything or explaining themselves.
-          </li>
-          <li>
-            People who cannot use, or do not want to use, a visual-first app — screen reader users,
-            keyboard-only users, people with vestibular conditions or motion sensitivity.
-          </li>
-          <li>
-            People lying awake at 3am who want something to follow that will not light up the room.
-          </li>
-          <li>
-            Clinicians, teachers and employers who need something free they can point at without a
-            procurement process or a data protection review. There is{' '}
-            <Link href="/for-clinics">a page for that</Link>.
-          </li>
-        </ul>
-
-        <h2>How the tool works</h2>
-        <p>
-          Every breathing session delivers the same instruction three ways at the same moment: a
-          circle that grows and shrinks with the breath, a voice that names each phase and counts
-          the seconds, and a tone that rises across the in-breath and falls across the out-breath.
-          Any one of the three is enough to follow a whole session, so you can switch the other two
-          off.
-        </p>
-        <p>
-          Underneath, the session is worked out in advance as a single timeline, and all the output
-          — visual, spoken, audible, haptic, and the screen reader announcements — is derived from
-          one clock. That is a technical detail with a user-facing consequence: the channels cannot
-          drift apart, so the voice never falls behind the circle.{' '}
-          <Link href="/how-it-works">How it works</Link> explains the rest.
-        </p>
-
-        <h2>How the content is written and checked</h2>
-        <p>
-          This is the part most wellness sites are vague about, so here it is plainly.
-        </p>
-        <ul>
-          <li>
-            The explanations are written for a general audience from published research and from
-            standard teaching in cardiac and pulmonary rehabilitation, physiotherapy and
-            cognitive behavioural therapy.
-          </li>
-          <li>
-            <strong>The content has not been reviewed by a clinician.</strong> Nobody here is
-            presenting themselves as a doctor, physiotherapist or psychologist, and you should not
-            treat the site as though someone with those qualifications signed it off.
+            Explanations are written for a general audience from published research and from
+            standard teaching in cardiac and pulmonary rehabilitation, physiotherapy and cognitive
+            behavioural therapy.
           </li>
           <li>
             Where a claim rests on specific research, that research is cited by author, year and
-            journal so you can go and read it yourself. Every citation on this site has been checked
-            against the journal or PubMed record.
+            journal so you can go and read it yourself. Every citation has been checked against the
+            journal or PubMed record.
           </li>
           <li>
-            Every technique page carries a “what the evidence says” section that is honest when the
+            Every technique page has a “what the evidence says” section that is honest when the
             evidence is thin — including for the two most famous techniques on the site.
           </li>
-          <li>
-            Guides carry the date they were last gone over. When something changes, the date
-            changes.
-          </li>
+          <li>Guides carry the date they were last gone over. When something changes, so does the date.</li>
         </ul>
         <p>
-          Corrections are genuinely welcome and get made rather than argued with. If something here
-          is wrong, out of date, or overstates what a study found,{' '}
-          <Link href="/contact">please say so</Link>.
+          If something here is wrong, out of date, or overstates what a study found, I would genuinely
+          rather know. <Link href="/contact">Tell me</Link> and I will fix it rather than argue about
+          it.
         </p>
 
-        <h2>What this site deliberately does not claim</h2>
+        <h2>What I will not claim</h2>
         <p>
-          It would be easy — and better for search traffic — to write that breathing cures anxiety,
-          fixes insomnia or lowers blood pressure. Plenty of sites do. We do not, because it is not
-          true, and because health-adjacent writing that overpromises does real harm to people
-          making decisions about their care.
+          It would be easy — and much better for search traffic — to write that breathing cures
+          anxiety, fixes insomnia or lowers your blood pressure. Plenty of sites do. I will not,
+          because it is not true, and because overpromising in health writing does real harm to
+          people making decisions about their care.
         </p>
-        <p>What you will not find here:</p>
+        <p>You will not find any of this here:</p>
         <ul>
           <li>Claims that breathing exercises treat or cure any condition.</li>
-          <li>Testimonials, reviews, user counts, awards or press mentions — we have none.</li>
+          <li>Testimonials, reviews, user counts, awards or press mentions — there are none.</li>
           <li>Invented experts, fabricated credentials or borrowed medical authority.</li>
           <li>Statistics without a source you can check.</li>
           <li>
-            Before-and-after promises, or any suggestion that this replaces treatment a clinician has
-            recommended.
+            Any suggestion that this replaces treatment a clinician has recommended, or a reason to
+            delay getting help.
           </li>
         </ul>
         <p>
-          The <Link href="/medical-disclaimer">medical disclaimer</Link> sets out the limits, and it
-          is not boilerplate — it lists the specific conditions where you should talk to someone
-          before trying certain techniques.
+          The <Link href="/medical-disclaimer">medical disclaimer</Link> is not boilerplate — it
+          lists the specific situations where you should talk to someone before trying certain
+          techniques.
         </p>
 
-        <h2>Where the research comes from</h2>
+        <h2>Who I made it for</h2>
+        <ul>
+          <li>
+            Anyone with an ordinary stressful job who wants three minutes at their desk without
+            installing anything or explaining themselves.
+          </li>
+          <li>
+            People who cannot use a visual-first app — screen reader users, keyboard-only users,
+            anyone who finds movement uncomfortable. “Close your eyes and relax” is advice most
+            breathing apps quietly contradict by requiring you to watch them. This one does not:
+            every cue is on screen, spoken aloud and played as a tone at the same moment, and any
+            one of the three is enough on its own.
+          </li>
+          <li>People lying awake at 3am who want something to follow that will not light up the room.</li>
+          <li>
+            Clinicians, teachers and employers who need something free they can point at without a
+            procurement process. There is <Link href="/for-clinics">a page for that</Link>.
+          </li>
+        </ul>
+
+        <h2>How it works, briefly</h2>
         <p>
-          These are the main sources behind the explanations across the site. They are starting
-          points for your own reading, not a systematic review, and none of the authors are
+          Every session is worked out in advance as a single timeline, and the circle, the voice,
+          the tones, the vibration and the screen reader announcements all come off the same clock —
+          so they cannot drift apart. All the audio is generated in your browser rather than
+          downloaded, which is why it works on a slow connection and costs almost nothing to run.{' '}
+          <Link href="/how-it-works">How it works</Link> has the detail.
+        </p>
+
+        <h2>The research I leaned on</h2>
+        <p>
+          Starting points for your own reading, not a systematic review. None of these authors are
           connected with this site in any way.
         </p>
         <ul className="source-list">
@@ -157,32 +191,14 @@ export default function AboutPage() {
           ))}
         </ul>
 
-        <h2>How it stays free</h2>
+        <h2>Get in touch</h2>
         <p>
-          Advertising, on the guides and article pages and on the screen after a session finishes.
-          Never during a session, never as a pop-up, and never as something you have to dismiss
-          before you can breathe. If a placement ever gets in the way of the actual exercise, that
-          is a bug — please report it.
+          Corrections, accessibility problems, clinical or workplace use, or anything about the ads
+          and privacy — <Link href="/contact">email me</Link>. It goes to a person, not a ticketing
+          system.
         </p>
-        <p>
-          There is no paid tier, no premium content and no email list. We do not sell data, because
-          we do not collect any: no accounts, no analytics that identify individuals, and no record
-          of which techniques you use. See the <Link href="/privacy">privacy policy</Link> and the{' '}
-          <Link href="/cookies">cookie policy</Link> for the specifics.
-        </p>
-
-        <h2>How it is built</h2>
-        <p>
-          It is a static site. Every sound you hear is generated in your browser using the Web Audio
-          API, and the voice uses your device’s own speech engine — no audio files are downloaded,
-          and no server is involved once the page has loaded. That is why it is fast on a bad
-          connection, works on an old phone, and costs almost nothing to run.
-        </p>
-
-        <h2>Contact</h2>
-        <p>
-          <Link href="/contact">Get in touch</Link> — corrections, accessibility problems, clinical
-          or workplace use, or anything about the ads and privacy.
+        <p className="small muted">
+          Written by {AUTHOR.name}. Not medically reviewed.
         </p>
       </article>
     </>

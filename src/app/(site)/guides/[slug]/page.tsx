@@ -6,7 +6,7 @@ import GuideBlocks from '@/components/GuideBlocks';
 import Reveal from '@/components/Reveal';
 import { GUIDES, getGuide } from '@/lib/guides';
 import { getSource } from '@/lib/sources';
-import { SITE } from '@/lib/site';
+import { AUTHOR, SITE } from '@/lib/site';
 import { breadcrumbLd, formatDate } from '@/lib/seo';
 
 type Params = { params: Promise<{ slug: string }> };
@@ -47,9 +47,9 @@ export default async function GuidePage({ params }: Params) {
     description: g.summary,
     datePublished: g.updated,
     dateModified: g.updated,
-    // Attributed to the site rather than to a named person. Inventing an
-    // author would be worse than declaring the organisation honestly.
-    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    // A named person, matching the byline shown on the page. No credentials
+    // are claimed here because none exist — see /about.
+    author: { '@type': 'Person', name: AUTHOR.name, url: `${SITE.url}/about` },
     inLanguage: 'en',
     isAccessibleForFree: true,
     mainEntityOfPage: `${SITE.url}/guides/${g.slug}`,
@@ -85,6 +85,9 @@ export default async function GuidePage({ params }: Params) {
           <h1>{g.title}</h1>
           <p className="lede">{g.standfirst}</p>
           <p className="meta-row">
+            <span>
+              By <Link href="/about">{AUTHOR.name}</Link>
+            </span>
             <span>{g.minutes} min read</span>
             <span>
               Last checked <time dateTime={g.updated}>{formatDate(g.updated)}</time>
