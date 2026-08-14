@@ -1,0 +1,3448 @@
+<!doctype html>
+<html lang="en" data-theme="system" data-motion="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Breathe — preview</title>
+<meta name="description" content="Standalone preview of the Breathe guided breathing player.">
+<style>/* ==================================================================
+   Breathe — design system
+
+   One accent. One radius family. One spacing scale. One type scale.
+   Phase colours are low-chroma relatives of the accent rather than
+   competing hues, so a session never looks like a dashboard.
+
+   Contrast is checked for WCAG 2.2 AA (4.5:1 body, 3:1 large text and
+   UI boundaries). The `contrast` theme targets AAA.
+   ================================================================== */
+
+:root {
+  /* ---- type scale (fluid, 1.25 ratio, capped so it never shouts) ---- */
+  --text-scale: 1;
+  --step--2: 0.78rem;
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: clamp(1.125rem, 1.06rem + 0.3vw, 1.25rem);
+  --step-2: clamp(1.35rem, 1.2rem + 0.7vw, 1.6rem);
+  --step-3: clamp(1.6rem, 1.35rem + 1.2vw, 2.15rem);
+  --step-4: clamp(2.1rem, 1.6rem + 2.4vw, 3.25rem);
+  --step-5: clamp(2.6rem, 1.8rem + 3.6vw, 4.25rem);
+
+  /* ---- spacing scale ---- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4.5rem;
+  --s-9: 7rem;
+
+  /* ---- shape ---- */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+  --r-full: 999px;
+
+  /* ---- measure ---- */
+  --measure: 36rem;
+  --maxw: 72rem;
+
+  /* ---- motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-breath: cubic-bezier(0.42, 0, 0.58, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 520ms;
+
+  /* ---- type faces ---- */
+  --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Charter, ui-serif, Georgia,
+    serif;
+
+  /* ---- light: warm paper, not clinical grey ---- */
+  --bg: #f6f5f1;
+  --bg-elev: #fffefb;
+  --bg-sunk: #edebe4;
+  --bg-tint: #e8efec;
+  --fg: #16211f;
+  --fg-muted: #55625e;
+  --fg-faint: #66706d;
+  --line: #e2ded4;
+  --line-strong: #8f8b82;
+
+  --accent: #0e6a5a;
+  --accent-hover: #0a5347;
+  --accent-fg: #ffffff;
+  --accent-soft: #dcebe6;
+
+  --inhale: #0e6a5a;
+  --hold: #5d6486;
+  --exhale: #2c6f80;
+  --rest: #6f7873;
+
+  --danger: #8f2f2b;
+  --focus: #0e6a5a;
+
+  --shadow-1: 0 1px 2px rgb(22 33 31 / 5%), 0 2px 8px rgb(22 33 31 / 4%);
+  --shadow-2: 0 2px 4px rgb(22 33 31 / 5%), 0 14px 40px -12px rgb(22 33 31 / 14%);
+  --orb-glow: 0 0 80px -10px rgb(14 106 90 / 22%);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='system'] {
+    color-scheme: dark;
+    --bg: #0a1110;
+    --bg-elev: #101917;
+    --bg-sunk: #060d0c;
+    --bg-tint: #102420;
+    --fg: #e7ede9;
+    --fg-muted: #9dada8;
+    --fg-faint: #7d8c88;
+    --line: #22302d;
+    --line-strong: #586562;
+    --accent: #5ed3b8;
+    --accent-hover: #7fe0c9;
+    --accent-fg: #04231d;
+    --accent-soft: #14302a;
+    --inhale: #5ed3b8;
+    --hold: #a9adda;
+    --exhale: #77c4dd;
+    --rest: #93a09c;
+    --danger: #ff9f9b;
+    --focus: #5ed3b8;
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 10px rgb(0 0 0 / 25%);
+    --shadow-2: 0 2px 6px rgb(0 0 0 / 45%), 0 18px 48px -14px rgb(0 0 0 / 60%);
+    --orb-glow: 0 0 110px -12px rgb(94 211 184 / 26%);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a1110;
+  --bg-elev: #101917;
+  --bg-sunk: #060d0c;
+  --bg-tint: #102420;
+  --fg: #e7ede9;
+  --fg-muted: #9dada8;
+  --fg-faint: #7d8c88;
+  --line: #22302d;
+  --line-strong: #586562;
+  --accent: #5ed3b8;
+  --accent-hover: #7fe0c9;
+  --accent-fg: #04231d;
+  --accent-soft: #14302a;
+  --inhale: #5ed3b8;
+  --hold: #a9adda;
+  --exhale: #77c4dd;
+  --rest: #93a09c;
+  --danger: #ff9f9b;
+  --focus: #5ed3b8;
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 10px rgb(0 0 0 / 25%);
+  --shadow-2: 0 2px 6px rgb(0 0 0 / 45%), 0 18px 48px -14px rgb(0 0 0 / 60%);
+  --orb-glow: 0 0 110px -12px rgb(94 211 184 / 26%);
+}
+
+:root[data-theme='contrast'] {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-elev: #000000;
+  --bg-sunk: #000000;
+  --bg-tint: #000000;
+  --fg: #ffffff;
+  --fg-muted: #ffffff;
+  --fg-faint: #ffffff;
+  --line: #ffffff;
+  --line-strong: #ffffff;
+  --accent: #ffe14d;
+  --accent-hover: #fff28a;
+  --accent-fg: #000000;
+  --accent-soft: #1c1a00;
+  --inhale: #ffe14d;
+  --hold: #8fe9ff;
+  --exhale: #a8ff9e;
+  --rest: #ffffff;
+  --danger: #ff9a9a;
+  --focus: #ffe14d;
+  --shadow-1: none;
+  --shadow-2: none;
+  --orb-glow: none;
+}
+
+:root[data-theme='contrast'] .card,
+:root[data-theme='contrast'] .btn,
+:root[data-theme='contrast'] .chip {
+  border-width: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* base                                                                */
+/* ------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: calc(100% * var(--text-scale));
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  letter-spacing: -0.003em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+  color: var(--fg);
+}
+
+h1 {
+  font-size: var(--step-4);
+}
+h2 {
+  font-size: var(--step-3);
+  line-height: 1.18;
+}
+h3 {
+  font-size: var(--step-1);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+h4 {
+  font-size: var(--step-0);
+  font-family: var(--font);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+p {
+  margin: 0 0 1em;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  transition: color var(--dur-fast) var(--ease-soft),
+    text-decoration-color var(--dur-fast) var(--ease-soft);
+}
+a:hover {
+  color: var(--accent-hover);
+  text-decoration-color: currentColor;
+}
+
+strong {
+  font-weight: 600;
+}
+
+kbd {
+  font: inherit;
+  font-size: 0.85em;
+  padding: 0.1em 0.42em;
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: var(--bg-elev);
+  white-space: nowrap;
+}
+
+/* One focus treatment everywhere, keyboard-only. */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: var(--s-7) 0;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--fg);
+}
+
+/* ------------------------------------------------------------------ */
+/* layout                                                              */
+/* ------------------------------------------------------------------ */
+
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(1.15rem, 4vw, 2.5rem);
+}
+
+.narrow {
+  max-width: 46rem;
+}
+
+/* Vertical rhythm for page sections — replaces ad-hoc inline padding. */
+.section {
+  padding-block: var(--s-7);
+}
+@media (min-width: 900px) {
+  .section {
+    padding-block: var(--s-8);
+  }
+}
+.section-tight {
+  padding-block: var(--s-6);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
+}
+
+.muted {
+  color: var(--fg-muted);
+}
+.small {
+  font-size: var(--step--1);
+}
+.center {
+  text-align: center;
+}
+
+/* A short label above a heading — gives sections a hierarchy without
+   resorting to another font size. */
+.eyebrow {
+  display: block;
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: var(--s-3);
+}
+
+.section-head {
+  max-width: 42rem;
+  margin-bottom: var(--s-6);
+}
+.section-head p {
+  color: var(--fg-muted);
+  font-size: var(--step-1);
+  margin-bottom: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent);
+  color: var(--accent-fg);
+  padding: var(--s-3) var(--s-5);
+  z-index: 100;
+  border-radius: 0 0 var(--r-md) 0;
+  font-weight: 600;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* scroll reveal                                                       */
+/* ------------------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+.reveal[data-shown='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* buttons                                                             */
+/* ------------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 46px;
+  padding: 0.65rem 1.2rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-elev);
+  color: var(--fg);
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft),
+    transform var(--dur-fast) var(--ease-soft), box-shadow var(--dur) var(--ease-soft);
+}
+.btn:hover {
+  border-color: var(--line-strong);
+  background: var(--bg-sunk);
+  color: var(--fg);
+}
+.btn:active {
+  transform: scale(0.975);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+  box-shadow: var(--shadow-1);
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--accent-fg);
+  box-shadow: var(--shadow-2);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--fg-muted);
+}
+.btn-ghost:hover {
+  background: var(--bg-sunk);
+  color: var(--fg);
+}
+
+.btn-lg {
+  font-size: var(--step-0);
+  padding: 0.9rem 1.8rem;
+  min-height: 54px;
+}
+
+.btn[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--fg);
+}
+
+/* Filter chips — lighter than buttons, used for the technique filter. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 42px;
+  padding: 0.45rem 1rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg-muted);
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-soft);
+}
+.chip:hover {
+  border-color: var(--line-strong);
+  color: var(--fg);
+}
+.chip[aria-pressed='true'] {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+/* ------------------------------------------------------------------ */
+/* cards                                                               */
+/* ------------------------------------------------------------------ */
+
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-1);
+}
+
+a.card {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+a.card:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2);
+}
+a.card:active {
+  transform: translateY(-1px);
+}
+a.card h3 {
+  margin-bottom: var(--s-2);
+}
+
+/* The arrow that slides on hover — the only decorative motion on a card. */
+.card-go {
+  margin-top: auto;
+  padding-top: var(--s-4);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--accent);
+}
+.card-go svg {
+  transition: transform var(--dur) var(--ease-out);
+}
+a.card:hover .card-go svg {
+  transform: translateX(4px);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--r-full);
+  background: var(--bg-sunk);
+  color: var(--fg-muted);
+}
+
+.note {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--bg-elev);
+  padding: var(--s-5);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+.note-warn {
+  border-left-color: var(--danger);
+}
+.note h3 {
+  margin-top: 0;
+}
+.note > :last-child {
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* header / footer                                                     */
+/* ------------------------------------------------------------------ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  border-bottom: 1px solid transparent;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  transition: border-color var(--dur) var(--ease-soft);
+}
+.site-header[data-stuck='true'] {
+  border-bottom-color: var(--line);
+}
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-height: 68px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--fg);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.brand svg {
+  color: var(--accent);
+  flex: none;
+}
+
+.site-nav {
+  margin-left: auto;
+  display: flex;
+  gap: var(--s-1);
+  align-items: center;
+}
+.site-nav a {
+  color: var(--fg-muted);
+  text-decoration: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--r-full);
+  font-size: var(--step--1);
+  font-weight: 500;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  transition: color var(--dur-fast) var(--ease-soft),
+    background var(--dur-fast) var(--ease-soft);
+}
+.site-nav a:hover {
+  color: var(--fg);
+  background: var(--bg-sunk);
+}
+
+/* Below 620px the wordy links collapse; Techniques + Settings stay, the rest
+   live in the footer. A hamburger for four links would be worse.
+   Note the `.site-nav a` prefix — it has to out-specify the rule above, which
+   is what made an earlier version of this quietly never collapse. */
+@media (max-width: 620px) {
+  .site-nav a.nav-secondary {
+    display: none;
+  }
+  .site-header .wrap {
+    min-height: 58px;
+    gap: var(--s-2);
+  }
+  .site-nav a {
+    padding-inline: var(--s-3);
+  }
+}
+
+/* 360px and below: keep the mark, drop the wordmark. Every pixel of the row
+   is then doing something — nothing gets pushed off the edge. */
+@media (max-width: 360px) {
+  .brand {
+    font-size: 0;
+    gap: 0;
+  }
+  .brand svg {
+    width: 26px;
+    height: 26px;
+  }
+  .site-nav {
+    gap: 0;
+  }
+  .site-nav a {
+    padding-inline: var(--s-2);
+  }
+  .site-header .btn {
+    padding-inline: var(--s-3);
+  }
+}
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: var(--s-9);
+  padding: var(--s-8) 0 var(--s-7);
+  color: var(--fg-muted);
+  font-size: var(--step--1);
+  background: var(--bg-sunk);
+}
+.site-footer a {
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: var(--fg);
+  text-decoration: underline;
+}
+.site-footer strong {
+  color: var(--fg);
+  display: block;
+  margin-bottom: var(--s-3);
+  font-size: var(--step--1);
+}
+.footer-cols {
+  display: grid;
+  gap: var(--s-6) var(--s-5);
+  grid-template-columns: 1fr 1fr;
+}
+.footer-cols > :first-child {
+  grid-column: 1 / -1;
+}
+@media (min-width: 760px) {
+  .footer-cols {
+    grid-template-columns: 1.6fr repeat(4, minmax(0, 1fr));
+  }
+  .footer-cols > :first-child {
+    grid-column: auto;
+  }
+}
+.footer-cols ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-cols li {
+  margin-bottom: var(--s-2);
+}
+.footer-legal {
+  margin-top: var(--s-7);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+  font-size: var(--step--2);
+  color: var(--fg-faint);
+  max-width: 46rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* hero + the orb                                                      */
+/* ------------------------------------------------------------------ */
+
+.hero {
+  position: relative;
+  display: grid;
+  gap: var(--s-5);
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  padding-block: clamp(1.5rem, 5vw, 3rem) var(--s-7);
+  grid-template-columns: 1fr;
+  /* On a phone the orb sits between the headline and the buttons, so the
+     product itself is on the first screen rather than three scrolls down. */
+  grid-template-areas:
+    'title'
+    'orb'
+    'copy';
+}
+.hero-title {
+  grid-area: title;
+}
+.hero-copy {
+  grid-area: copy;
+}
+.hero .orb-stage {
+  grid-area: orb;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: 1.05fr 0.95fr;
+    grid-template-areas:
+      'title orb'
+      'copy orb';
+    align-items: start;
+    justify-items: start;
+    text-align: left;
+    gap: var(--s-4) var(--s-8);
+    padding-block: var(--s-7) var(--s-8);
+  }
+  .hero .orb-stage {
+    align-self: center;
+  }
+}
+
+.hero h1 {
+  font-size: var(--step-5);
+  margin-bottom: 0;
+  max-width: 15ch;
+}
+@media (max-width: 899px) {
+  .hero h1 {
+    max-width: 18ch;
+  }
+}
+.hero .lede {
+  font-size: var(--step-1);
+  color: var(--fg-muted);
+  max-width: 34rem;
+  margin-bottom: var(--s-6);
+  line-height: 1.55;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  justify-content: center;
+}
+@media (min-width: 900px) {
+  .hero-actions {
+    justify-content: flex-start;
+  }
+}
+.hero-meta {
+  margin: var(--s-5) 0 0;
+  font-size: var(--step--1);
+  color: var(--fg-faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  justify-content: center;
+}
+@media (min-width: 900px) {
+  .hero-meta {
+    justify-content: flex-start;
+  }
+}
+/* The dots are decoration between items; when the row wraps they strand at the
+   start of a line, so below 560px the gap does the separating instead. */
+@media (max-width: 560px) {
+  .hero-meta .sep {
+    display: none;
+  }
+  .hero-meta {
+    gap: var(--s-1) var(--s-4);
+  }
+}
+
+.orb-stage {
+  position: relative;
+  width: min(64vw, 17rem);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+}
+
+.orb-rings {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  opacity: 0.9;
+}
+.orb-rings::before,
+.orb-rings::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+}
+.orb-rings::before {
+  inset: 12%;
+}
+.orb-rings::after {
+  inset: 24%;
+  border-style: dashed;
+  opacity: 0.7;
+}
+
+.orb {
+  position: relative;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 38%,
+    color-mix(in srgb, var(--accent) 42%, var(--bg-elev)),
+    color-mix(in srgb, var(--accent) 78%, transparent) 72%
+  );
+  box-shadow: var(--orb-glow);
+  will-change: transform;
+  animation: orb-breathe 11s var(--ease-breath) infinite;
+}
+
+@media (min-width: 900px) {
+  .orb-stage {
+    width: min(40vw, 26rem);
+  }
+}
+
+@keyframes orb-breathe {
+  0% {
+    transform: scale(0.62);
+  }
+  50% {
+    transform: scale(1.32);
+  }
+  100% {
+    transform: scale(0.62);
+  }
+}
+
+.orb-caption {
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+.orb-caption span {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: caption-swap 11s var(--ease-soft) infinite;
+}
+/* Negative delay starts the second label half a cycle in, so the two cross-fade
+   instead of stacking. Base opacity is 0 — otherwise both are painted until the
+   animation first runs, which is exactly what it looked like. */
+.orb-caption span:nth-child(2) {
+  animation-delay: -5.5s;
+}
+/* Each label owns half the cycle with a short cross-fade at the handover.
+   An earlier version left a two-second gap where neither was visible — which
+   read as the caption blinking off rather than swapping. */
+@keyframes caption-swap {
+  0%,
+  44% {
+    opacity: 1;
+  }
+  50%,
+  94% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* the session player                                                  */
+/* ------------------------------------------------------------------ */
+
+.player {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.player-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding-block: var(--s-3);
+  min-height: 60px;
+}
+.player-title {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  color: var(--fg-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 520px) {
+  .player-title {
+    display: none;
+  }
+}
+
+.player-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-5);
+  padding: var(--s-5) clamp(1.15rem, 4vw, 2rem) var(--s-7);
+  text-align: center;
+}
+
+/* Audio-only mode: the whole screen recedes but never fully disappears,
+   and comes back the moment anything is focused or hovered. */
+.player[data-dim='true'] .player-main {
+  opacity: 0.32;
+  transition: opacity 1.2s var(--ease-soft);
+}
+.player[data-dim='true'] .player-main:hover,
+.player[data-dim='true'] .player-main:focus-within {
+  opacity: 1;
+  transition: opacity var(--dur) var(--ease-soft);
+}
+
+.pacer-wrap {
+  position: relative;
+  width: min(70vw, 20rem);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--s-2);
+}
+
+/* The still outer ring gives the moving circle something to move against,
+   so "how far through the breath am I" is readable at a glance. */
+.pacer-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  opacity: 0.55;
+}
+.pacer-ring::after {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  border: 1px dashed var(--line);
+  opacity: 0.55;
+}
+
+.pacer {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 38%,
+    color-mix(in srgb, var(--phase-color) 38%, var(--bg-elev)),
+    color-mix(in srgb, var(--phase-color) 72%, transparent) 74%
+  );
+  box-shadow: 0 0 70px -18px color-mix(in srgb, var(--phase-color) 38%, transparent);
+  transform: scale(var(--pacer-scale, 0.3));
+  will-change: transform;
+  /* Duration and easing are set per phase from JS — see BreathPlayer. */
+  transition-property: transform;
+  transition-timing-function: var(--ease-breath);
+  transition-duration: 0ms;
+}
+
+.pacer-label {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.pacer-count {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 2.9rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--fg);
+  opacity: 0.85;
+}
+
+/* The phase word is the focal point — bigger than the count, and it is
+   what someone glancing at the screen needs to read. */
+.phase-label {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  line-height: 1.1;
+  min-height: 1.25em;
+  color: var(--phase-color);
+  margin: 0;
+  transition: color var(--dur-slow) var(--ease-soft);
+}
+
+.phase-instruction {
+  max-width: 34rem;
+  color: var(--fg-muted);
+  margin: 0;
+}
+
+.player-meta {
+  font-size: var(--step--1);
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.player-progress {
+  width: min(100%, 24rem);
+  height: 3px;
+  border-radius: var(--r-full);
+  background: var(--line);
+  overflow: hidden;
+}
+.player-progress > div {
+  height: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+  transform-origin: left;
+}
+
+.player-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  justify-content: center;
+  margin-top: var(--s-2);
+}
+
+/* Reduced motion: the circle holds still at a readable size and the bar
+   under it carries the timing instead. */
+:root[data-motion='reduced'] .pacer {
+  transform: scale(0.82) !important;
+  transition: none !important;
+  opacity: 0.35;
+}
+:root[data-motion='reduced'] .orb {
+  animation: none;
+  transform: scale(1);
+}
+:root[data-motion='reduced'] .orb-caption span {
+  animation: none;
+}
+:root[data-motion='reduced'] .orb-caption span:nth-child(2) {
+  opacity: 0;
+}
+:root[data-motion='reduced'] .pacer-bar {
+  display: block;
+}
+:root[data-motion='reduced'] .pacer-wrap {
+  margin-bottom: var(--s-6);
+}
+
+.pacer-bar {
+  display: none;
+  position: absolute;
+  bottom: -1.9rem;
+  left: 6%;
+  right: 6%;
+  height: 8px;
+  background: var(--bg-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+.pacer-bar > div {
+  height: 100%;
+  background: var(--phase-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  a.card:hover {
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* forms and settings                                                  */
+/* ------------------------------------------------------------------ */
+
+.settings {
+  display: grid;
+  gap: var(--s-5);
+}
+.field {
+  display: grid;
+  gap: var(--s-2);
+}
+.field > label,
+.field > span,
+.fieldset > legend {
+  font-weight: 600;
+  font-size: var(--step--1);
+}
+.fieldset {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s-4) var(--s-5) var(--s-5);
+  margin: 0;
+  background: var(--bg-elev);
+  display: grid;
+  gap: var(--s-4);
+}
+.fieldset > legend {
+  padding-inline: var(--s-2);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 400;
+}
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.choices .btn {
+  min-height: 42px;
+  padding: 0.45rem 0.95rem;
+  font-weight: 500;
+}
+input[type='range'] {
+  width: 100%;
+  accent-color: var(--accent);
+  min-height: 40px;
+}
+select,
+input[type='text'],
+textarea {
+  font: inherit;
+  font-size: var(--step--1);
+  padding: 0.6rem 0.75rem;
+  min-height: 46px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-elev);
+  color: var(--fg);
+  width: 100%;
+}
+.switch {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-height: 44px;
+  padding: var(--s-1) 0;
+  cursor: pointer;
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+.switch .small {
+  font-weight: 400;
+}
+.switch input {
+  width: 1.3rem;
+  height: 1.3rem;
+  flex: none;
+  margin-top: 0.15rem;
+  accent-color: var(--accent);
+}
+
+dialog {
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  background: var(--bg-elev);
+  color: var(--fg);
+  padding: var(--s-6);
+  max-width: min(36rem, 94vw);
+  width: 100%;
+  max-height: 86vh;
+  box-shadow: var(--shadow-2);
+}
+dialog::backdrop {
+  background: rgb(6 13 12 / 45%);
+  backdrop-filter: blur(3px);
+}
+
+/* ------------------------------------------------------------------ */
+/* ads + consent                                                       */
+/* ------------------------------------------------------------------ */
+
+.ad-slot {
+  margin: var(--s-7) auto;
+  max-width: 44rem;
+  text-align: center;
+}
+.ad-slot > .ad-label {
+  display: block;
+  font-size: var(--step--2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: var(--s-2);
+}
+.ad-slot .ad-frame {
+  min-height: 90px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+  color: var(--fg-faint);
+  font-size: var(--step--1);
+  padding: var(--s-4);
+}
+
+.consent {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 60;
+  background: var(--bg-elev);
+  border-top: 1px solid var(--line);
+  padding: var(--s-4) 0;
+  box-shadow: var(--shadow-2);
+  animation: consent-in var(--dur-slow) var(--ease-out);
+}
+@keyframes consent-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+.consent .wrap {
+  display: flex;
+  gap: var(--s-4);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.consent p {
+  margin: 0;
+  flex: 1 1 22rem;
+  font-size: var(--step--1);
+  color: var(--fg-muted);
+}
+
+/* ------------------------------------------------------------------ */
+/* prose                                                               */
+/* ------------------------------------------------------------------ */
+
+.prose {
+  max-width: var(--measure);
+}
+.prose > h2 {
+  margin-top: var(--s-7);
+}
+.prose > h3 {
+  margin-top: var(--s-6);
+}
+.prose p,
+.prose li {
+  color: var(--fg-muted);
+  line-height: 1.68;
+}
+.prose > p:first-of-type {
+  font-size: var(--step-1);
+  color: var(--fg);
+  line-height: 1.55;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.2em;
+  margin-bottom: 1.2em;
+}
+.prose li {
+  margin-bottom: var(--s-2);
+  padding-left: 0.2em;
+}
+.prose li::marker {
+  color: var(--accent);
+}
+.prose .note p,
+.prose .note li {
+  color: var(--fg);
+}
+
+.lede {
+  font-size: var(--step-1);
+  color: var(--fg-muted);
+  line-height: 1.55;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+th,
+td {
+  text-align: left;
+  padding: var(--s-3);
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+th {
+  font-weight: 600;
+  color: var(--fg);
+}
+td {
+  color: var(--fg-muted);
+}
+thead th {
+  font-size: var(--step--2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+/* ------------------------------------------------------------------ */
+/* technique cards + filter                                            */
+/* ------------------------------------------------------------------ */
+
+/* The pattern of a technique, drawn. Width is proportional to seconds, so
+   4-7-8 visibly has a long tail and box breathing is four equal blocks —
+   readable before you have read a single word. */
+.phase-strip {
+  display: flex;
+  gap: 3px;
+  height: 5px;
+  margin-bottom: var(--s-4);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+.phase-strip > span {
+  border-radius: var(--r-full);
+  background: var(--rest);
+  opacity: 0.8;
+}
+.phase-strip > span[data-kind='inhale'] {
+  background: var(--inhale);
+}
+.phase-strip > span[data-kind='hold'] {
+  background: var(--hold);
+}
+.phase-strip > span[data-kind='exhale'] {
+  background: var(--exhale);
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+.filter-note {
+  margin-bottom: var(--s-5);
+  min-height: 1.5em;
+  max-width: 44rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--bg-elev);
+}
+.table-scroll table {
+  min-width: 34rem;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: var(--s-3) var(--s-4);
+}
+.table-scroll tr:last-child th,
+.table-scroll tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* dialog internals                                                    */
+/* ------------------------------------------------------------------ */
+
+.dialog-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-bottom: var(--s-5);
+}
+.dialog-head h2 {
+  margin: 0 0 var(--s-1);
+  font-size: var(--step-2);
+}
+.dialog-body {
+  max-height: 62vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: var(--s-2);
+  margin-right: calc(var(--s-2) * -1);
+}
+
+/* ------------------------------------------------------------------ */
+/* article pages                                                       */
+/* ------------------------------------------------------------------ */
+
+.article-head {
+  max-width: 44rem;
+  margin-bottom: var(--s-7);
+}
+.article-head h1 {
+  margin-bottom: var(--s-3);
+}
+.article-head .lede {
+  font-size: var(--step-2);
+  font-family: var(--font-display);
+  color: var(--fg);
+  line-height: 1.35;
+}
+
+.breadcrumb {
+  font-size: var(--step--1);
+  color: var(--fg-faint);
+  margin-bottom: var(--s-5);
+}
+.breadcrumb a {
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+.breadcrumb a:hover {
+  color: var(--accent);
+}
+
+/* The pattern, spelled out as a list of phases with their seconds. */
+.pattern-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--s-6);
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.pattern-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  background: var(--bg-elev);
+  padding: var(--s-3) var(--s-4);
+  margin: 0;
+  font-size: var(--step--1);
+}
+.pattern-list li::marker {
+  content: '';
+}
+.pattern-list .pattern-name {
+  font-weight: 600;
+  color: var(--fg);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.pattern-list .pattern-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+.pattern-list .pattern-seconds {
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  align-items: center;
+  font-size: var(--step--1);
+  color: var(--fg-muted);
+  margin-bottom: var(--s-5);
+}
+
+/* Sticky start button on mobile: on a technique page the whole point is to
+   start, and on a phone that button scrolls away within a paragraph. */
+.start-bar {
+  position: sticky;
+  bottom: var(--s-4);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  margin-top: var(--s-7);
+  pointer-events: none;
+}
+.start-bar .btn {
+  pointer-events: auto;
+  box-shadow: var(--shadow-2);
+}
+@media (min-width: 780px) {
+  .start-bar {
+    position: static;
+    justify-content: flex-start;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* FAQ                                                                 */
+/* ------------------------------------------------------------------ */
+
+.faq {
+  max-width: 46rem;
+}
+.faq-group {
+  margin-bottom: var(--s-7);
+  scroll-margin-top: 5rem;
+}
+.faq-group h2 {
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--s-5);
+}
+.faq dl {
+  margin: 0;
+}
+.faq-item + .faq-item {
+  margin-top: var(--s-5);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+}
+.faq dt {
+  font-weight: 600;
+  font-size: var(--step-0);
+  margin-bottom: var(--s-2);
+}
+.faq dd {
+  margin: 0;
+  color: var(--fg-muted);
+  line-height: 1.68;
+}
+.faq dd p:last-child {
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* sources, guides, contact                                            */
+/* ------------------------------------------------------------------ */
+
+/* Citations get room to breathe and a clear separation between the reference
+   and our note about what it does and does not show. */
+.source-list {
+  list-style: none;
+  padding: 0;
+}
+.source-list li {
+  padding-left: var(--s-4);
+  border-left: 2px solid var(--line);
+  margin-bottom: var(--s-4);
+}
+.source-list a {
+  font-weight: 600;
+}
+.source-list .small {
+  display: block;
+  margin-top: var(--s-1);
+}
+
+.guide-techniques {
+  margin-block: var(--s-5) var(--s-6);
+}
+/* Cards inside prose should not inherit the prose measure. */
+.prose .grid {
+  max-width: none;
+}
+
+.contact-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--bg-elev);
+  box-shadow: var(--shadow-1);
+  padding: var(--s-5) var(--s-6);
+  max-width: 34rem;
+}
+.contact-email {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  margin-bottom: var(--s-3);
+  word-break: break-word;
+}
+
+.prose code {
+  font-size: 0.9em;
+  padding: 0.12em 0.38em;
+  border-radius: 5px;
+  background: var(--bg-sunk);
+  border: 1px solid var(--line);
+  word-break: break-word;
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="app"></div>
+<script>
+/**
+ * Technique library.
+ *
+ * This file is pure data + pure types. It has no React, DOM or Next.js
+ * dependency, so it can be unit-tested, reused in a native app, or exported
+ * as JSON for partners (see /for-clinics).
+ */
+const ISSUES = [
+    {
+        id: 'stress',
+        label: 'Work stress',
+        question: 'Stressed at work?',
+        blurb: 'Short, discreet resets you can do at your desk with your eyes open.',
+        icon: 'briefcase',
+    },
+    {
+        id: 'anxiety',
+        label: 'Anxiety',
+        question: 'Feeling anxious or on edge?',
+        blurb: 'Longer exhales that gently shift you out of fight-or-flight.',
+        icon: 'wave',
+    },
+    {
+        id: 'panic',
+        label: 'Panic',
+        question: 'Panicking or overwhelmed?',
+        blurb: 'Simple, slow anchors for when everything feels like too much.',
+        icon: 'anchor',
+    },
+    {
+        id: 'sleep',
+        label: 'Sleep',
+        question: 'Can’t sleep?',
+        blurb: 'Wind-down patterns designed to be done lying down in the dark.',
+        icon: 'moon',
+    },
+    {
+        id: 'focus',
+        label: 'Focus',
+        question: 'Need to focus?',
+        blurb: 'Steady, even rhythms used before deep work, exams and surgery.',
+        icon: 'target',
+    },
+    {
+        id: 'energy',
+        label: 'Energy',
+        question: 'Low on energy?',
+        blurb: 'Brisker patterns for the mid-afternoon slump. Sitting down only.',
+        icon: 'spark',
+    },
+    {
+        id: 'pain',
+        label: 'Pain',
+        question: 'In pain or discomfort?',
+        blurb: 'Soft, slow breathing used in pain clinics and during labour.',
+        icon: 'heart',
+    },
+    {
+        id: 'breath',
+        label: 'Breathlessness',
+        question: 'Short of breath?',
+        blurb: 'Techniques taught in pulmonary rehab to ease the work of breathing.',
+        icon: 'lungs',
+    },
+    {
+        id: 'beginner',
+        label: 'New to this',
+        question: 'Never done this before?',
+        blurb: 'Start here. Nothing to learn, nothing to hold, nothing to get wrong.',
+        icon: 'seed',
+    },
+];
+const IN = (s, label = 'Breathe in', say = 'Breathe in') => ({
+    kind: 'inhale',
+    seconds: s,
+    label,
+    say,
+});
+const HOLD = (s, label = 'Hold', say = 'Hold') => ({
+    kind: 'hold',
+    seconds: s,
+    label,
+    say,
+});
+const OUT = (s, label = 'Breathe out', say = 'Breathe out') => ({
+    kind: 'exhale',
+    seconds: s,
+    label,
+    say,
+});
+const REST = (s, label = 'Rest', say = 'Rest') => ({
+    kind: 'rest',
+    seconds: s,
+    label,
+    say,
+});
+const TECHNIQUES = [
+    {
+        slug: 'belly-breathing',
+        name: 'Belly Breathing',
+        aka: 'Diaphragmatic breathing',
+        tagline: 'The foundation. Four seconds in, six seconds out.',
+        summary: 'Diaphragmatic (belly) breathing is the simplest guided breathing exercise and the base every other technique is built on. Free, guided, with voice and sound.',
+        issues: ['beginner', 'stress', 'anxiety', 'pain', 'breath'],
+        level: 'Beginner',
+        bpm: '6 breaths / min',
+        defaultMinutes: 3,
+        minuteOptions: [1, 2, 3, 5, 10],
+        cycles: [[IN(4), OUT(6)]],
+        intro: 'Sit or lie comfortably. Rest one hand on your belly. Let the hand rise as you breathe in, and fall as you breathe out.',
+        outro: 'Notice how your body feels now compared to when you started.',
+        howTo: [
+            'Sit upright or lie down, shoulders loose.',
+            'Put one hand on your chest and one on your belly.',
+            'Breathe in through your nose for 4 seconds, letting the lower hand rise while the upper hand stays still.',
+            'Breathe out slowly for 6 seconds, letting the belly fall.',
+            'Repeat for 3 to 5 minutes.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'Belly breathing means letting the diaphragm — the sheet of muscle under your lungs — do the work, instead of hauling air in with your neck and shoulders. When you are stressed, breathing tends to move upward into the chest and get faster and shallower. Belly breathing puts it back where it belongs.',
+                    'It is the first thing taught in cardiac rehab, pulmonary rehab, and most clinical anxiety programmes, because it is almost impossible to do wrong and requires nothing except a few minutes.',
+                ],
+            },
+            {
+                h: 'Why the exhale is longer',
+                p: [
+                    'Your heart speeds up slightly as you breathe in and slows down as you breathe out. That is a normal reflex called respiratory sinus arrhythmia. By making the out-breath longer than the in-breath, you spend more of each cycle in the slowing-down half, which is the mechanism behind almost every calming breath pattern on this site.',
+                    'Four in and six out is a comfortable starting ratio. If six feels long, use four in and five out and build up.',
+                ],
+            },
+            {
+                h: 'When to use it',
+                p: [
+                    'Any time. It is the safest technique here — there is no breath-holding and no fast breathing — so it is the right default if you are pregnant, have a heart or lung condition, or simply do not know where to start.',
+                ],
+            },
+        ],
+        cautions: [
+            'Safe for almost everyone, including during pregnancy.',
+            'If lying flat makes you breathless, prop yourself up on pillows or sit in a chair.',
+        ],
+        evidence: 'Slow diaphragmatic breathing at around six breaths per minute is the most studied pattern in the field. Trials consistently show short-term reductions in self-reported stress and rises in heart rate variability, though effects on longer-term outcomes are smaller and less certain.',
+    },
+    {
+        slug: 'box-breathing',
+        name: 'Box Breathing',
+        aka: 'Square breathing, 4-4-4-4',
+        tagline: 'Four equal sides, and nobody at the next desk can tell you are doing it.',
+        summary: 'Box breathing (4-4-4-4) is a free guided exercise for stress and focus — breathe in, hold, out, hold, all for four seconds. With voice guidance and sound.',
+        issues: ['stress', 'focus', 'anxiety', 'beginner'],
+        level: 'Beginner',
+        bpm: '3.75 breaths / min',
+        defaultMinutes: 4,
+        minuteOptions: [1, 2, 4, 6, 10],
+        cycles: [[IN(4), HOLD(4, 'Hold', 'Hold, full'), OUT(4), HOLD(4, 'Hold', 'Hold, empty')]],
+        intro: 'Four seconds in, four hold, four out, four hold. Keep it smooth — you should never feel like you are gasping at the end of a side.',
+        outro: 'That was four even sides, repeated. Come back to it any time your thinking gets loud.',
+        howTo: [
+            'Sit upright with both feet on the floor.',
+            'Breathe out fully to empty.',
+            'Breathe in through the nose for 4 seconds.',
+            'Hold with the lungs full for 4 seconds.',
+            'Breathe out through the mouth for 4 seconds.',
+            'Hold with the lungs empty for 4 seconds, then repeat.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'Box breathing splits the breath into four equal parts: in, hold, out, hold. The symmetry is the point — it gives your attention something simple and predictable to hold on to, which is exactly what is missing when you are stressed.',
+                    'It is widely taught in high-pressure jobs precisely because it is discreet. Nobody at the next desk can tell you are doing it.',
+                ],
+            },
+            {
+                h: 'Why it works at a desk',
+                p: [
+                    'Four seconds per side gives just under four breaths a minute, which is slow enough to nudge your nervous system towards the calmer, parasympathetic side without being so slow that it feels like effort.',
+                    'The two holds also stop the pattern from being purely relaxing. Box breathing tends to leave people alert-but-steady rather than sleepy, which is why it suits work hours better than 4-7-8 does.',
+                ],
+            },
+            {
+                h: 'Making it easier or harder',
+                p: [
+                    'If four seconds feels like a strain, drop to three per side. If it feels easy after a week, move up to five or six. Never chase a longer count at the cost of a smooth breath — strain defeats the purpose.',
+                ],
+            },
+        ],
+        cautions: [
+            'Contains breath-holding. If you are pregnant, or have a heart condition, high blood pressure, epilepsy or a history of fainting, use Coherent Breathing or Belly Breathing instead, or check with your clinician first.',
+            'Stop if you feel dizzy, tingly or light-headed and breathe normally.',
+            'Do not practise while driving, cycling or in water.',
+        ],
+        evidence: 'Box breathing has been studied mainly in small samples of students, athletes and healthcare staff, showing short-term drops in perceived stress and blood pressure. It is popular and low-risk, but the evidence base is thinner than for simple slow breathing.',
+    },
+    {
+        slug: 'coherent-breathing',
+        name: 'Coherent Breathing',
+        aka: 'Resonance breathing, 5.5 breaths per minute',
+        tagline: 'The pace most adults settle into. 5.5 seconds in, 5.5 out.',
+        summary: 'Coherent or resonant breathing at 5.5 breaths per minute is the pace where heart rate variability peaks. Free guided sessions with voice and tone cues.',
+        issues: ['stress', 'anxiety', 'focus', 'pain', 'beginner', 'energy', 'breath'],
+        level: 'Beginner',
+        bpm: '5.5 breaths / min',
+        defaultMinutes: 5,
+        minuteOptions: [2, 5, 10, 15, 20],
+        cycles: [[IN(5.5), OUT(5.5)]],
+        intro: 'Even in, even out, no holding. Let the breath be quiet — this should feel almost effortless.',
+        outro: 'Ten minutes a day of this pace is the single most studied breathing habit there is.',
+        howTo: [
+            'Sit comfortably or lie down.',
+            'Breathe in gently through the nose for about 5.5 seconds.',
+            'Breathe out through the nose for about 5.5 seconds, with no pause between.',
+            'Keep the breath quiet and unforced.',
+            'Continue for 5 to 20 minutes.',
+        ],
+        body: [
+            {
+                h: 'What "resonance" means',
+                p: [
+                    'Your blood pressure, heart rate and breathing all oscillate. For most adults, those oscillations line up most strongly somewhere between five and six breaths a minute. Breathe at that pace and the swings in heart rate get large and smooth — a state usually described as cardiorespiratory resonance.',
+                    'That is why 5.5 breaths a minute keeps appearing: it is the average resonance frequency of an adult. It is also, not coincidentally, close to the pace of a rosary, a mantra, and a slow lullaby.',
+                ],
+            },
+            {
+                h: 'The one to build a habit around',
+                p: [
+                    'If you only ever use one technique on this site, make it this one. It has no breath-holding, no fast breathing, and no contraindications worth worrying about, so it can be practised daily and for long stretches.',
+                    'Most protocols in the research use ten to twenty minutes a day. Five minutes is still worth doing.',
+                ],
+            },
+            {
+                h: 'Finding your own pace',
+                p: [
+                    'Individual resonance frequency varies, roughly between 4.5 and 6.5 breaths a minute, and taller people tend to sit at the slower end. Try 5.5 first; if it feels rushed, use the pace control to slow it down, and if you feel short of air, speed it up slightly. The right pace feels boring, not challenging.',
+                ],
+            },
+        ],
+        cautions: [
+            'No breath-holding, so this is suitable for most people including during pregnancy.',
+            'If you feel short of air, speed the pace up slightly rather than pushing through.',
+        ],
+        evidence: 'Resonance-frequency breathing is the best-supported technique here. Randomised trials and meta-analyses report improvements in heart rate variability, blood pressure and self-reported anxiety, with the clearest results when practised daily over several weeks.',
+    },
+    {
+        slug: 'extended-exhale',
+        name: 'Extended Exhale',
+        aka: '4-6 breathing',
+        tagline: 'In for four, out for six. The simplest version of the longer-exhale idea.',
+        summary: 'Extended exhale breathing (4 in, 6 out) is a free guided technique for anxiety and tension, using a longer out-breath to calm the nervous system.',
+        issues: ['anxiety', 'stress', 'sleep', 'panic', 'beginner'],
+        level: 'Beginner',
+        bpm: '6 breaths / min',
+        defaultMinutes: 4,
+        minuteOptions: [1, 2, 4, 6, 10],
+        cycles: [[IN(4), OUT(6, 'Breathe out slowly', 'Breathe out, slowly')]],
+        intro: 'Breathe out through slightly pursed lips, as if cooling a hot drink. Let the out-breath be the easy part.',
+        outro: 'Anything with a longer out-breath than in-breath will do this. Now you know the trick.',
+        howTo: [
+            'Sit or lie down and let your shoulders drop.',
+            'Breathe in through the nose for 4 seconds.',
+            'Breathe out through pursed lips for 6 seconds.',
+            'Do not pause or hold at either end.',
+            'Continue for 4 to 6 minutes.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'This is belly breathing with the ratio made explicit: the out-breath is one and a half times the in-breath. Nothing is held, nothing is forced, and it can be done anywhere without anyone noticing.',
+                ],
+            },
+            {
+                h: 'Why a long exhale calms you',
+                p: [
+                    'Vagal activity — the braking system on your heart rate — rises during the out-breath and falls during the in-breath. Lengthening the exhale means more time with the brakes on. Subjectively this shows up as a loosening in the jaw, shoulders and stomach, usually within a minute or two.',
+                    'It is also the mechanism behind sighing, which is your body doing a crude version of this automatically.',
+                ],
+            },
+            {
+                h: 'When to use it',
+                p: [
+                    'Good for the ten minutes before a difficult conversation, after an argument, or when anxiety is background hum rather than acute panic. If you are in acute panic, use the Panic Anchor instead — it is deliberately even simpler.',
+                ],
+            },
+        ],
+        cautions: [
+            'Safe for most people. No breath-holding.',
+            'If pursed-lip exhaling makes you cough, breathe out through the nose instead.',
+        ],
+        evidence: 'Exhale-lengthened breathing has been repeatedly shown to raise vagally mediated heart rate variability and reduce self-reported state anxiety in short laboratory sessions. Longer-term effects are less well studied.',
+    },
+    {
+        slug: 'physiological-sigh',
+        name: 'Physiological Sigh',
+        aka: 'Cyclic sighing, double inhale',
+        tagline: 'Two breaths in, one long breath out. Short enough to use mid-meeting.',
+        summary: 'The physiological sigh — a double inhale followed by a long exhale — is the fastest way to bring stress down in the moment. Free guided version with sound.',
+        issues: ['stress', 'anxiety', 'panic', 'beginner', 'energy'],
+        level: 'Beginner',
+        bpm: '5 breaths / min',
+        defaultMinutes: 2,
+        minuteOptions: [1, 2, 3, 5],
+        cycles: [
+            [
+                IN(2, 'Breathe in through the nose', 'Breathe in through the nose'),
+                IN(1, 'Sip a little more air in', 'Sip a little more air in'),
+                OUT(6, 'Long slow breath out', 'Long slow breath out through the mouth'),
+                REST(3, 'Rest', 'Rest'),
+            ],
+        ],
+        intro: 'Two breaths in through the nose — a full one, then a short top-up — then a long slow breath out through the mouth.',
+        outro: 'Two or three of these are often enough. You can use it in the middle of a meeting.',
+        howTo: [
+            'Breathe in through your nose until your lungs feel comfortably full.',
+            'Without breathing out, sip a second, shorter breath in through your nose.',
+            'Let a long, slow breath out through your mouth until your lungs are empty.',
+            'Rest for a moment, then repeat.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'You already do this. It is the shuddering double in-breath after crying, and the involuntary sigh you produce every few minutes without noticing. The physiological sigh is that reflex done deliberately.',
+                    'The second, smaller inhale is thought to reopen alveoli — the tiny air sacs in the lungs — that have collapsed slightly, making the following exhale more efficient at offloading carbon dioxide. That is the usual explanation for why people tend to notice an effect from this one quickly, though the mechanism is better established than the size of the effect.',
+                ],
+            },
+            {
+                h: 'The one for right now',
+                p: [
+                    'Most techniques on this site want several minutes. Many people find this one does something noticeable within two or three breaths, which makes it worth trying mid-meeting, before you walk into a room, or the moment after something goes wrong.',
+                ],
+            },
+            {
+                h: 'As a daily practice',
+                p: [
+                    'A 2023 randomised trial at Stanford compared five minutes a day of cyclic sighing against mindfulness meditation and other breathwork over a month. Cyclic sighing came out ahead on daily mood improvement and reduction in breathing rate — one of the few head-to-head trials in this area.',
+                ],
+            },
+        ],
+        cautions: [
+            'No breath-holding, safe for most people.',
+            'Do not force the second inhale. If your lungs already feel full, the top-up should be tiny.',
+        ],
+        evidence: 'Balban et al. (2023, Cell Reports Medicine) randomised 108 adults to five minutes daily of cyclic sighing, box breathing, cyclic hyperventilation or mindfulness meditation for a month; cyclic sighing produced the largest improvement in positive affect and the biggest drop in respiratory rate.',
+    },
+    {
+        slug: '4-7-8-breathing',
+        name: '4-7-8 Breathing',
+        aka: 'The relaxing breath',
+        tagline: 'Four in, seven hold, eight out. Best known for getting to sleep.',
+        summary: '4-7-8 breathing is a free guided relaxation technique for sleep and anxiety: breathe in for 4, hold for 7, exhale for 8, with voice and sound guidance.',
+        issues: ['sleep', 'anxiety'],
+        level: 'Intermediate',
+        bpm: '3.2 breaths / min',
+        defaultMinutes: 3,
+        minuteOptions: [1, 2, 3, 5],
+        cycles: [[IN(4, 'Breathe in through the nose', 'Breathe in through the nose'), HOLD(7), OUT(8, 'Breathe out through the mouth', 'Breathe out through the mouth')]],
+        intro: 'Rest the tip of your tongue behind your top front teeth. Breathe out fully before the first in-breath. Four cycles is the traditional dose.',
+        outro: 'If you are in bed, stop here and let your breathing go back to its own rhythm.',
+        howTo: [
+            'Rest the tip of your tongue on the ridge behind your upper front teeth.',
+            'Empty your lungs through the mouth.',
+            'Breathe in quietly through the nose for 4 seconds.',
+            'Hold the breath for 7 seconds.',
+            'Breathe out through the mouth for 8 seconds, making a soft whoosh.',
+            'Repeat for four cycles to begin with.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'Popularised by Dr Andrew Weil, 4-7-8 is a pranayama-derived pattern with a long hold and a very long exhale. At just over three breaths a minute it is the slowest technique on this site.',
+                    'The long hold is what makes it distinctive — and what makes it unsuitable for some people. See the cautions below.',
+                ],
+            },
+            {
+                h: 'Why it suits bedtime',
+                p: [
+                    'The eight-second exhale is more than twice the inhale, so the calming half of each cycle dominates heavily. Unlike box breathing, it tends to make people drowsy rather than alert, which is the wrong effect at 3pm and the right one at 11pm.',
+                    'Do it lying down, in the dark, with the screen off. Turn on Audio-only mode and the screen will dim itself.',
+                ],
+            },
+            {
+                h: 'Start with four cycles',
+                p: [
+                    'The traditional guidance is four cycles at first, working up to eight over several weeks. Holding for seven seconds is genuinely hard at the beginning; if it is a struggle, halve every number (2-3.5-4) and keep the ratio. The ratio is what matters, not the absolute seconds.',
+                ],
+            },
+        ],
+        cautions: [
+            'Contains a long breath-hold. Not recommended during pregnancy, or if you have low or high blood pressure that is not well controlled, a heart condition, epilepsy, or a history of fainting — use Two-to-One Breathing for sleep instead.',
+            'Stop immediately if you feel dizzy, tingly or panicky.',
+            'Never practise while driving or in water.',
+            'If holding your breath triggers anxiety — which is common — this is the wrong technique for you, and that is fine.',
+        ],
+        evidence: 'Small trials report reductions in blood pressure, heart rate and self-reported anxiety after 4-7-8 breathing, but samples are small and results are mixed. Its popularity outruns its evidence base; coherent breathing is better supported.',
+    },
+    {
+        slug: 'two-to-one-breathing',
+        name: 'Two-to-One Breathing',
+        aka: 'Wind-down breathing',
+        tagline: 'Out-breath twice as long as the in-breath. No holding at all.',
+        summary: 'Two-to-one breathing (4 in, 8 out) is a free guided wind-down technique for sleep, with no breath-holding — a gentler alternative to 4-7-8.',
+        issues: ['sleep', 'anxiety', 'pain'],
+        level: 'Beginner',
+        bpm: '5 breaths / min',
+        defaultMinutes: 6,
+        minuteOptions: [3, 6, 10, 15],
+        cycles: [[IN(4), OUT(8, 'Breathe out, long and slow', 'Breathe out, long and slow')]],
+        intro: 'Lie on your back or your side. Let the out-breath drain away rather than pushing it out.',
+        outro: 'Stop whenever you like. If you drift off before the end, that was the point.',
+        howTo: [
+            'Lie down and let your body get heavy.',
+            'Breathe in through the nose for 4 seconds.',
+            'Breathe out through the nose or mouth for 8 seconds.',
+            'No pause at either end — the breath should be continuous.',
+            'Continue for 6 to 15 minutes or until you fall asleep.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'The exhale is exactly twice the inhale, and nothing is held. It gives you most of what 4-7-8 gives you without the seven-second hold that many people find unpleasant or unsafe.',
+                ],
+            },
+            {
+                h: 'Why we recommend it over 4-7-8 for most people',
+                p: [
+                    'Breath-holding raises carbon dioxide, and for a subset of people — particularly those who already have anxiety about breathing — that sensation is itself alarming. A pattern that makes you tense while trying to relax is a bad trade.',
+                    'Two-to-one keeps the calming ratio and removes the hold. If 4-7-8 has ever made you feel panicky, start here.',
+                ],
+            },
+            {
+                h: 'A note on falling asleep',
+                p: [
+                    'Sessions here run on a timer and end with a soft chime. If you are using this at bedtime, turn the end chime off in Settings and set a longer duration — the guidance will simply fade rather than wake you.',
+                ],
+            },
+        ],
+        cautions: [
+            'No breath-holding, suitable during pregnancy.',
+            'If eight seconds leaves you gasping at the end, use 4 in and 6 out until it feels comfortable.',
+        ],
+        evidence: 'Follows the same exhale-lengthening mechanism as extended exhale breathing, which is well supported for short-term anxiety reduction. Direct trials of sleep onset are limited, and breathing exercises are not a substitute for treatment of insomnia — CBT-I remains first-line.',
+    },
+    {
+        slug: 'moon-breathing',
+        name: 'Moon Breathing',
+        aka: 'Chandra bhedana, left-nostril breathing',
+        tagline: 'In through the left nostril, out through the right. Traditionally cooling.',
+        summary: 'Moon breathing (chandra bhedana) is a free guided left-nostril breathing practice used traditionally as a cooling, calming, pre-sleep technique.',
+        issues: ['sleep', 'anxiety'],
+        level: 'Intermediate',
+        bpm: '4.6 breaths / min',
+        defaultMinutes: 5,
+        minuteOptions: [2, 5, 8, 12],
+        cycles: [
+            [
+                IN(4, 'In through the LEFT nostril', 'Breathe in through the left nostril'),
+                HOLD(2, 'Hold, switch hands', 'Hold, and switch'),
+                OUT(7, 'Out through the RIGHT nostril', 'Breathe out through the right nostril'),
+            ],
+        ],
+        intro: 'Use your right thumb to close your right nostril and your ring finger to close the left. Breathe in on the left, then switch and breathe out on the right.',
+        outro: 'Let both nostrils open and breathe normally for a few breaths before you move.',
+        howTo: [
+            'Sit comfortably. Rest your right thumb beside your right nostril and your right ring finger beside your left nostril.',
+            'Close the right nostril with your thumb and breathe in through the left for 4 seconds.',
+            'Briefly close both and switch fingers.',
+            'Release the right nostril and breathe out through it for 7 seconds.',
+            'Repeat, always in on the left and out on the right.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'A yogic practice in which the in-breath is always taken through the left nostril. In traditional terms the left channel is "chandra", the moon: cooling, quieting, associated with evening. The mirror practice, in on the right, is considered warming.',
+                ],
+            },
+            {
+                h: 'Is there anything to it physiologically?',
+                p: [
+                    'Something real is going on, though it is less dramatic than tradition suggests. Nasal airflow naturally alternates between nostrils over a cycle of hours, and several small studies have found modest differences in heart rate and blood pressure between forced left- and right-nostril breathing.',
+                    'Honestly, a good part of the effect is probably the slow pace and the fact that holding your hand to your face is a strong signal to your brain that you are doing something deliberate. That is not nothing.',
+                ],
+            },
+            {
+                h: 'When to use it',
+                p: [
+                    'Evenings, or after something that has left you overheated and agitated. It requires a free hand, so it is not a desk technique.',
+                ],
+            },
+        ],
+        cautions: [
+            'Skip if your nose is blocked — forcing airflow through a congested nostril is uncomfortable and pointless.',
+            'Contains a short hold. If you are pregnant or have a heart condition, simply skip the hold and switch quickly.',
+        ],
+        evidence: 'Small studies of unilateral nostril breathing report modest effects on heart rate and blood pressure, with left-nostril breathing generally associated with parasympathetic shifts. Sample sizes are small and blinding is impossible, so treat the specific claims with caution.',
+    },
+    {
+        slug: 'panic-anchor',
+        name: 'Panic Anchor',
+        aka: 'Grounding breath',
+        tagline: 'For when it is too much. Nothing to count, nothing to hold.',
+        summary: 'A free guided breathing exercise for panic and overwhelm: a slow, simple in-and-out rhythm with grounding prompts and no breath-holding.',
+        issues: ['panic', 'anxiety', 'beginner'],
+        level: 'Beginner',
+        bpm: '5 breaths / min',
+        defaultMinutes: 3,
+        minuteOptions: [1, 2, 3, 5],
+        cycles: [
+            [
+                IN(4, 'In through the nose', 'Breathe in through your nose'),
+                OUT(8, 'Out, long and soft', 'And out, long and soft'),
+            ],
+            [
+                IN(4, 'In — feel your feet on the floor', 'Breathe in. Feel your feet on the floor'),
+                OUT(8, 'Out, long and soft', 'And out, long and soft'),
+            ],
+            [
+                IN(4, 'In through the nose', 'Breathe in through your nose'),
+                OUT(8, 'Out — let your shoulders drop', 'And out. Let your shoulders drop'),
+            ],
+            [
+                IN(4, 'In — name one thing you can see', 'Breathe in. Name one thing you can see'),
+                OUT(8, 'Out, long and soft', 'And out, long and soft'),
+            ],
+        ],
+        intro: 'You are safe, and this will pass. Do not try to breathe deeply — just slowly. Follow the circle, and let the out-breath be longer than the in.',
+        outro: 'That is the hardest part done. If panic attacks are happening often, it is worth telling a doctor — they are very treatable.',
+        howTo: [
+            'Sit down or lean against something solid.',
+            'Breathe in gently through the nose for 4 seconds — do not gulp.',
+            'Breathe out for 8 seconds, softly, through the mouth.',
+            'Between breaths, notice one thing you can see, hear or feel.',
+            'Keep going until the wave passes.',
+        ],
+        body: [
+            {
+                h: 'Why this one is different',
+                p: [
+                    'In a panic attack, complicated instructions are useless. There is no counting to remember, no holding, and no way to fail. The visual pacer, the voice and the tones all say the same thing, so you can follow whichever one you can still process.',
+                    'Grounding prompts are woven between the breaths because attention that has something to land on is attention that is not spiralling.',
+                ],
+            },
+            {
+                h: 'Do not breathe deeply',
+                p: [
+                    'This is the most common mistake. During panic many people over-breathe already, and taking big deep breaths makes the tingling, light-headedness and chest tightness worse, not better. What helps is slow and small, with a long out-breath.',
+                ],
+            },
+            {
+                h: 'When breathing is not enough',
+                p: [
+                    'A panic attack is horrible but not dangerous, and it peaks within about ten minutes. If you are having them regularly, breathing exercises are a useful tool but not a treatment — CBT and other therapies work well for panic disorder, and a GP appointment is a reasonable next step.',
+                    'If you are having thoughts of harming yourself, please contact your local emergency number or a crisis line rather than working through this alone.',
+                ],
+            },
+        ],
+        cautions: [
+            'No breath-holding, no fast breathing, safe in pregnancy.',
+            'If you feel faint, sit or lie down.',
+            'This is a coping tool, not a treatment for panic disorder. Speak to a clinician if attacks are frequent.',
+        ],
+        evidence: 'Slow paced breathing is a standard component of CBT for panic disorder, used alongside interoceptive exposure and cognitive work. Breathing retraining alone has smaller effects than full CBT.',
+    },
+    {
+        slug: 'pursed-lip-breathing',
+        name: 'Pursed-Lip Breathing',
+        tagline: 'Taught in pulmonary rehabilitation to ease the work of breathing.',
+        summary: 'Pursed-lip breathing is a free guided technique used in pulmonary rehabilitation to ease breathlessness — breathe in through the nose, out through pursed lips.',
+        issues: ['breath', 'pain', 'anxiety'],
+        level: 'Beginner',
+        bpm: '7.5 breaths / min',
+        defaultMinutes: 4,
+        minuteOptions: [2, 4, 6, 10],
+        cycles: [
+            [
+                IN(2, 'In through the nose', 'Breathe in through your nose'),
+                OUT(6, 'Out through pursed lips', 'Breathe out through pursed lips'),
+            ],
+        ],
+        intro: 'Purse your lips as if you were about to whistle, or blowing out a candle slowly. In for two through the nose, out for six through the lips.',
+        outro: 'Use this whenever activity leaves you short of breath — climbing stairs, carrying shopping.',
+        howTo: [
+            'Relax your neck and shoulders.',
+            'Breathe in through your nose for about 2 seconds, mouth closed.',
+            'Purse your lips as if to whistle.',
+            'Breathe out slowly and steadily through the pursed lips for about 4 to 6 seconds.',
+            'Do not force the air out — let it flow.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'Breathing out through narrowed lips creates a small back-pressure in the airways. In people with COPD and some other lung conditions, that back-pressure helps keep floppy airways open long enough to actually empty the lungs, which reduces the trapped air that causes the feeling of breathlessness.',
+                    'It is one of the first things taught in pulmonary rehabilitation, and it is useful for anyone who gets breathless with exertion or anxiety.',
+                ],
+            },
+            {
+                h: 'Also useful for pain and dental anxiety',
+                p: [
+                    'The same slow controlled exhale is used during wound dressing changes, injections and dental work, because it gives you something to do with your attention and stops the breath-holding that amplifies pain.',
+                ],
+            },
+            {
+                h: 'How to use it in real life',
+                p: [
+                    'The point is to use it while moving, not only while sitting. Breathe in before you start the effort — standing up, lifting, climbing — and breathe out through pursed lips during the effort itself.',
+                ],
+            },
+        ],
+        cautions: [
+            'If you have a diagnosed lung condition, ask your respiratory team or physiotherapist to check your technique — this site is general information, not a rehab programme.',
+            'Sudden or severe breathlessness, chest pain, blue lips or confusion are medical emergencies. Call emergency services, do not do a breathing exercise.',
+        ],
+        evidence: 'Pursed-lip breathing is an established component of pulmonary rehabilitation. Trials in COPD show reduced dyspnoea and improved exercise tolerance, though it does not change underlying lung function.',
+    },
+    {
+        slug: 'alternate-nostril-breathing',
+        name: 'Alternate Nostril Breathing',
+        aka: 'Nadi shodhana',
+        tagline: 'In one side, out the other, then reverse. Takes concentration, which is the point.',
+        summary: 'Alternate nostril breathing (nadi shodhana) is a free guided yogic technique for focus and balance, with step-by-step voice guidance and sound cues.',
+        issues: ['focus', 'stress', 'anxiety'],
+        level: 'Intermediate',
+        bpm: '4.3 breaths / min',
+        defaultMinutes: 5,
+        minuteOptions: [2, 5, 8, 12],
+        cycles: [
+            [
+                IN(4, 'In through the LEFT', 'Breathe in through the left nostril'),
+                HOLD(2, 'Hold, switch', 'Hold, and switch'),
+                OUT(4, 'Out through the RIGHT', 'Breathe out through the right nostril'),
+                IN(4, 'In through the RIGHT', 'Breathe in through the right nostril'),
+                HOLD(2, 'Hold, switch', 'Hold, and switch'),
+                OUT(4, 'Out through the LEFT', 'Breathe out through the left nostril'),
+            ],
+        ],
+        intro: 'Right thumb on the right nostril, right ring finger on the left. You always breathe out through the nostril you did not breathe in through.',
+        outro: 'Release your hand and take a few normal breaths before you get up.',
+        howTo: [
+            'Sit upright. Rest your right thumb by your right nostril, ring finger by your left.',
+            'Close the right nostril, breathe in through the left for 4 seconds.',
+            'Close both briefly, then release the right.',
+            'Breathe out through the right for 4 seconds, then breathe in through the right for 4 seconds.',
+            'Close both, release the left, and breathe out through the left.',
+            'That is one full round. Continue for 5 minutes.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'A classical pranayama practice in which the breath alternates sides in a fixed sequence. It demands more attention than most techniques here — you have to keep track of where you are — which is exactly why it works as a focus practice.',
+                ],
+            },
+            {
+                h: 'Why it helps concentration',
+                p: [
+                    'Part of it is the slow pace, shared with everything else on this site. The rest is task load: the sequence is just complicated enough to occupy working memory, so rumination has nowhere to go. Ten minutes of it before deep work functions like clearing your desk.',
+                ],
+            },
+            {
+                h: 'Getting the hand position right',
+                p: [
+                    'Traditionally the index and middle fingers rest on the forehead between the eyebrows, with the thumb and ring finger doing the work. If that is awkward — or you only have one usable hand — you can skip the hands entirely and simply imagine the alternation. The pacing still works.',
+                ],
+            },
+        ],
+        cautions: [
+            'Contains short holds. If you are pregnant or have a heart condition or high blood pressure, skip the holds and switch quickly instead.',
+            'Skip if your nose is blocked.',
+            'Requires a free hand — the one-handed variation is described above.',
+        ],
+        evidence: 'Trials of nadi shodhana report short-term reductions in blood pressure and improvements in attention tasks, but studies are typically small, unblinded and from a narrow set of research groups. Treat as promising rather than established.',
+    },
+    {
+        slug: 'tactical-reset',
+        name: 'Tactical Reset',
+        aka: 'Combat breathing, 4-4-6',
+        tagline: 'Steady before performance. Alert, not sleepy.',
+        summary: 'Tactical or combat breathing (4 in, 4 hold, 6 out) is a free guided technique used before high-pressure performance to steady the hands and the mind.',
+        issues: ['focus', 'stress', 'energy'],
+        level: 'Beginner',
+        bpm: '4.3 breaths / min',
+        defaultMinutes: 3,
+        minuteOptions: [1, 2, 3, 5],
+        cycles: [[IN(4), HOLD(4), OUT(6)]],
+        intro: 'Sit or stand tall. Eyes open, soft focus. This one is meant to leave you steady and awake, not relaxed.',
+        outro: 'Go and do the thing.',
+        howTo: [
+            'Stand or sit upright with your weight even.',
+            'Breathe in through the nose for 4 seconds.',
+            'Hold for 4 seconds.',
+            'Breathe out through the mouth for 6 seconds.',
+            'Repeat 3 to 5 times immediately before the task.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'A close cousin of box breathing used in military, police and emergency-medicine training, where it is taught as a way to bring an over-revved system down to a workable level without dulling it.',
+                    'The slightly longer exhale takes the edge off; the hold keeps it from tipping into drowsiness.',
+                ],
+            },
+            {
+                h: 'Use it as a pre-performance ritual',
+                p: [
+                    'The value is partly physiological and partly the ritual itself. Doing the same three breaths before every presentation, exam, lift or difficult phone call gives the moment a reliable starting point, and the pattern comes to carry the association.',
+                    'Three to five cycles is enough. This is not a technique you sit with for twenty minutes.',
+                ],
+            },
+            {
+                h: 'Eyes open on purpose',
+                p: [
+                    'Unlike most techniques here, this one is designed to be done with your eyes open and your posture upright, because you will use it in situations where closing your eyes is not an option.',
+                ],
+            },
+        ],
+        cautions: [
+            'Contains a 4-second hold. Skip the hold if you are pregnant, have high blood pressure, a heart condition, epilepsy or a history of fainting.',
+            'Stop if you feel light-headed.',
+        ],
+        evidence: 'Widely used in tactical and clinical training, with supporting evidence largely drawn from the broader slow-breathing and box-breathing literature rather than from trials of this exact pattern.',
+    },
+    {
+        slug: 'energising-breath',
+        name: 'Energising Breath',
+        aka: 'Bellows-style breathing, gentle bhastrika',
+        tagline: 'A brisk, warming pattern for the afternoon slump. Sitting down only.',
+        summary: 'A gentle bellows-style energising breathing exercise for low energy and the afternoon slump — free, guided, with clear safety cautions.',
+        issues: ['energy', 'focus'],
+        level: 'Advanced',
+        intense: true,
+        bpm: '30 breaths / min in bursts',
+        defaultMinutes: 2,
+        minuteOptions: [1, 2, 3],
+        cycles: [
+            [
+                IN(1, 'In', 'In'),
+                OUT(1, 'Out', 'Out'),
+                IN(1, 'In', ''),
+                OUT(1, 'Out', ''),
+                IN(1, 'In', ''),
+                OUT(1, 'Out', ''),
+                IN(1, 'In', ''),
+                OUT(1, 'Out', ''),
+                IN(1, 'In', ''),
+                OUT(1, 'Out', ''),
+                IN(3, 'Deep breath in', 'Now a deep breath in'),
+                OUT(6, 'Long breath out', 'And a long breath out'),
+                REST(8, 'Rest and notice', 'Rest, and notice how you feel'),
+            ],
+        ],
+        intro: 'Sit down for this one — never stand. Ten quick, active breaths through the nose, then one long breath, then rest. Stop at any point if you feel dizzy.',
+        outro: 'Sit for a moment before you stand up. If you felt light-headed at any point, choose a slower technique next time.',
+        howTo: [
+            'Sit in a chair with back support. Never do this standing, driving or in water.',
+            'Take ten brisk breaths in and out through the nose, about one per second, moving the belly actively.',
+            'Take one slow deep breath in and a long breath out.',
+            'Rest for several seconds and notice how you feel.',
+            'Repeat no more than 2 or 3 rounds.',
+        ],
+        body: [
+            {
+                h: 'What it is',
+                p: [
+                    'A deliberately gentle version of bhastrika, the yogic "bellows breath". Faster breathing raises alertness by activating the sympathetic nervous system — the opposite of everything else on this site, and useful in the right dose at 3pm.',
+                    'The version here is capped at ten quick breaths per round, followed by a long breath and a rest. That is far shorter than traditional or "Wim Hof style" protocols, on purpose.',
+                ],
+            },
+            {
+                h: 'The honest safety talk',
+                p: [
+                    'Fast breathing blows off carbon dioxide, which narrows blood vessels in the brain and causes light-headedness, tingling in the hands and face, and sometimes fainting. People do faint doing this. That is why the instruction to sit down is not decorative.',
+                    'Deaths have occurred when people combined this style of breathing with being in water. Never do breathwork in a pool, bath, or the sea.',
+                ],
+            },
+            {
+                h: 'A better default',
+                p: [
+                    'If you are tired because you are under-slept, this will not fix it and a ten-minute walk outside probably works better. Consider Coherent Breathing instead — counterintuitively, slow breathing often leaves people feeling more resourced than fast breathing does.',
+                ],
+            },
+        ],
+        cautions: [
+            'Sit down. Never practise standing, driving, or in or near water.',
+            'Do not use if you are pregnant, or have epilepsy, uncontrolled high blood pressure, a heart condition, glaucoma, a history of fainting, panic disorder, or are recovering from surgery.',
+            'Stop at once if you feel dizzy, faint, tingly or unwell, and breathe normally.',
+            'Not suitable for children.',
+        ],
+        evidence: 'Fast-paced breathing raises sympathetic activity and subjective arousal. In the Stanford 2023 comparison, cyclic hyperventilation performed worse than slow breathing on mood outcomes. Risks of light-headedness and syncope are well documented.',
+    },
+];
+function getTechnique(slug) {
+    return TECHNIQUES.find((t) => t.slug === slug);
+}
+function techniquesForIssue(issue) {
+    return TECHNIQUES.filter((t) => t.issues.includes(issue));
+}
+function cycleSeconds(cycle) {
+    return cycle.reduce((n, p) => n + p.seconds, 0);
+}
+function averageCycleSeconds(t) {
+    const total = t.cycles.reduce((n, c) => n + cycleSeconds(c), 0);
+    return total / t.cycles.length;
+}
+
+/**
+ * Session engine — pure functions, no DOM.
+ *
+ * The whole session is precomputed into a flat timeline of steps with absolute
+ * start/end times. Everything else (the animation, the voice, the tones, the
+ * screen reader announcements) is derived from `elapsed` seconds, so all the
+ * output channels are guaranteed to stay in sync and a paused/resumed or
+ * backgrounded tab can never drift.
+ */
+
+/**
+ * How small and how large the circle gets.
+ *
+ * Never zero, or the out-breath ends on nothing. And never quite 1: the still
+ * ring behind the circle is the reference for "lungs full", so the circle has
+ * to stop just short of it — at exactly 1 it covers its own target and you
+ * lose all sense of how far through the breath you are.
+ */
+const MIN_SCALE = 0.28;
+const MAX_SCALE = 0.88;
+/**
+ * @param paceScale 1 = as written. 1.2 = 20% slower. Clamped by the UI to 0.7–1.4.
+ */
+function buildTimeline(technique, targetSeconds, paceScale = 1) {
+    const steps = [];
+    let t = 0;
+    let cycle = 0;
+    let index = 0;
+    let scale = MIN_SCALE;
+    // Always complete whole breath cycles: a session never cuts off mid-inhale.
+    while (t < targetSeconds) {
+        const variant = technique.cycles[cycle % technique.cycles.length];
+        cycle += 1;
+        for (const phase of variant) {
+            const seconds = round2(phase.seconds * paceScale);
+            const fromScale = scale;
+            const toScale = phase.kind === 'inhale'
+                ? MAX_SCALE
+                : phase.kind === 'exhale' || phase.kind === 'rest'
+                    ? MIN_SCALE
+                    : fromScale; // hold: stay put, full or empty
+            steps.push({
+                phase,
+                start: round2(t),
+                end: round2(t + seconds),
+                cycle,
+                index,
+                fromScale,
+                toScale,
+            });
+            scale = toScale;
+            t = round2(t + seconds);
+            index += 1;
+        }
+        // Guard against a malformed technique producing an infinite loop.
+        if (cycleSeconds(variant) <= 0)
+            break;
+    }
+    return { steps, duration: t, cycles: cycle };
+}
+function positionAt(timeline, elapsed) {
+    if (elapsed >= timeline.duration) {
+        return { step: null, progress: 1, countdown: 0, countUp: 0, secondIndex: 0, finished: true };
+    }
+    // Binary search — sessions can be 20+ minutes and this runs every frame.
+    const steps = timeline.steps;
+    let lo = 0;
+    let hi = steps.length - 1;
+    while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+        if (elapsed < steps[mid].end)
+            hi = mid;
+        else
+            lo = mid + 1;
+    }
+    const step = steps[lo];
+    if (!step)
+        return { step: null, progress: 1, countdown: 0, countUp: 0, secondIndex: 0, finished: true };
+    const span = step.end - step.start || 1;
+    const into = elapsed - step.start;
+    const progress = clamp(into / span, 0, 1);
+    const wholeSeconds = Math.max(1, Math.round(span));
+    return {
+        step,
+        progress,
+        countdown: Math.max(1, Math.ceil(step.end - elapsed)),
+        countUp: clamp(Math.floor(into) + 1, 1, wholeSeconds),
+        secondIndex: Math.floor(into),
+        finished: false,
+    };
+}
+/**
+ * Size of the circle partway through a step, 0–1.
+ *
+ * The real player does not call this every frame — it hands the whole phase to
+ * a CSS transition and lets the compositor interpolate. This is used for the
+ * still preview, for reduced-motion, and to seed a transition after a pause.
+ */
+function stepScale(step, progress) {
+    if (!step)
+        return MIN_SCALE;
+    const eased = step.phase.kind === 'hold' ? 0 : easeInOut(clamp(progress, 0, 1));
+    return step.fromScale + (step.toScale - step.fromScale) * eased;
+}
+function formatClock(seconds) {
+    const s = Math.max(0, Math.round(seconds));
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}:${r.toString().padStart(2, '0')}`;
+}
+function easeInOut(x) {
+    return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+}
+function clamp(n, min, max) {
+    return Math.min(max, Math.max(min, n));
+}
+function round2(n) {
+    return Math.round(n * 100) / 100;
+}
+
+/**
+ * Audio guide: generated tones (Web Audio) + spoken cues (Web Speech).
+ *
+ * Nothing is downloaded — every sound is synthesised, so the site stays fast,
+ * works offline once cached, and costs nothing to serve. Both channels degrade
+ * silently on browsers that lack them.
+ */
+const DEFAULT_AUDIO = {
+    tones: true,
+    voice: true,
+    ambient: false,
+    volume: 0.6,
+    rate: 0.85,
+    voiceURI: '',
+};
+class BreathAudio {
+    constructor() {
+        this.ctx = null;
+        this.master = null;
+        this.padGain = null;
+        this.padNodes = [];
+        this.phaseGain = null;
+        this.phaseNodes = [];
+        this.settings = { ...DEFAULT_AUDIO };
+        this.lastSpoken = '';
+    }
+    get supportsTones() {
+        return typeof window !== 'undefined' && !!(window.AudioContext || window.webkitAudioContext);
+    }
+    get supportsVoice() {
+        return typeof window !== 'undefined' && 'speechSynthesis' in window;
+    }
+    /** Must be called from a user gesture (a click/keypress) to satisfy autoplay policies. */
+    async resume() {
+        if (!this.supportsTones)
+            return;
+        if (!this.ctx) {
+            const Ctor = window.AudioContext ||
+                window.webkitAudioContext;
+            this.ctx = new Ctor();
+            this.master = this.ctx.createGain();
+            this.master.gain.value = this.settings.volume;
+            this.master.connect(this.ctx.destination);
+        }
+        if (this.ctx.state === 'suspended')
+            await this.ctx.resume();
+        // Some iOS versions need a silent blip before they will make sound.
+        this.blip();
+    }
+    update(settings) {
+        this.settings = { ...this.settings, ...settings };
+        if (this.master && this.ctx) {
+            this.master.gain.setTargetAtTime(this.settings.volume, this.ctx.currentTime, 0.05);
+        }
+        if (!this.settings.ambient)
+            this.stopAmbient();
+        else
+            this.startAmbient();
+        if (!this.settings.tones)
+            this.stopPhaseTone(0.08);
+        if (!this.settings.voice)
+            this.cancelSpeech();
+    }
+    get current() {
+        return { ...this.settings };
+    }
+    /**
+     * Start a phase: a tone that lasts the whole phase, plus the spoken label.
+     *
+     * The tone is not a blip at the start — it rises continuously for the entire
+     * in-breath and falls for the entire out-breath, so you can follow the whole
+     * breath by ear with the screen off.
+     */
+    cue(phase, spoken, seconds) {
+        this.startPhaseTone(phase.kind, seconds ?? phase.seconds);
+        const text = spoken ?? phase.say;
+        if (text)
+            this.speak(text);
+    }
+    /**
+     * A sustained, gliding tone for the length of the phase.
+     *  - inhale: pitch rises the whole way up
+     *  - exhale: pitch falls the whole way down
+     *  - hold:   a steady, quieter tone so silence never feels like a dropout
+     *  - rest:   a low, very quiet tone
+     */
+    startPhaseTone(kind, seconds) {
+        this.stopPhaseTone(0.1);
+        if (!this.settings.tones || !this.ctx || !this.master)
+            return;
+        const ctx = this.ctx;
+        const dur = Math.max(0.5, seconds);
+        const spec = {
+            inhale: { from: 196, to: 392, peak: 0.1 },
+            exhale: { from: 392, to: 174, peak: 0.1 },
+            hold: { from: 294, to: 294, peak: 0.05 },
+            rest: { from: 147, to: 147, peak: 0.035 },
+        }[kind];
+        const t0 = ctx.currentTime;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.exponentialRampToValueAtTime(spec.peak, t0 + Math.min(0.35, dur * 0.2));
+        gain.gain.setValueAtTime(spec.peak, t0 + Math.max(0.35, dur - 0.45));
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        // A soft low-pass keeps it closer to a hum than a test tone.
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 1400;
+        filter.connect(gain).connect(this.master);
+        const oscs = [];
+        // Fundamental plus a quiet fifth above it, which reads as "warm" rather
+        // than "electronic" and survives phone speakers better.
+        [
+            { mult: 1, level: 1 },
+            { mult: 1.5, level: 0.32 },
+        ].forEach(({ mult, level }) => {
+            const osc = ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(spec.from * mult, t0);
+            if (spec.to !== spec.from) {
+                osc.frequency.exponentialRampToValueAtTime(spec.to * mult, t0 + dur);
+            }
+            const g = ctx.createGain();
+            g.gain.value = level;
+            osc.connect(g).connect(filter);
+            osc.start(t0);
+            osc.stop(t0 + dur + 0.2);
+            oscs.push(osc);
+        });
+        this.phaseGain = gain;
+        this.phaseNodes = [...oscs, filter, gain];
+    }
+    stopPhaseTone(fade = 0.15) {
+        if (!this.ctx || !this.phaseGain)
+            return;
+        const ctx = this.ctx;
+        try {
+            this.phaseGain.gain.cancelScheduledValues(ctx.currentTime);
+            this.phaseGain.gain.setTargetAtTime(0, ctx.currentTime, fade);
+        }
+        catch {
+            /* ignore */
+        }
+        const nodes = this.phaseNodes;
+        window.setTimeout(() => {
+            nodes.forEach((n) => {
+                try {
+                    n.stop?.();
+                }
+                catch {
+                    /* already stopped */
+                }
+                try {
+                    n.disconnect();
+                }
+                catch {
+                    /* ignore */
+                }
+            });
+        }, Math.max(200, fade * 4000));
+        this.phaseGain = null;
+        this.phaseNodes = [];
+    }
+    /**
+     * @param interrupt true cuts off whatever is being said (use for phase
+     *   changes), false queues behind it (use for the counts, so "breathe in"
+     *   is never chopped in half by "two").
+     */
+    speak(text, force = false, interrupt = true) {
+        if (!this.settings.voice || !this.supportsVoice || !text)
+            return;
+        this.lastSpoken = text;
+        try {
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = this.settings.rate;
+            u.pitch = 0.95;
+            u.volume = Math.min(1, this.settings.volume + 0.3);
+            const v = this.pickVoice();
+            if (v)
+                u.voice = v;
+            if (interrupt)
+                window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(u);
+        }
+        catch {
+            /* speech is a bonus, never a hard dependency */
+        }
+    }
+    /**
+     * Speak a line and call `done` when the voice has finished — used for the
+     * intro, so the first "breathe in" does not cut it off mid-sentence.
+     * Falls back to a short delay when speech is off or unsupported, and is
+     * capped by `maxMs` in case the browser never fires `onend`.
+     */
+    speakThen(text, done, maxMs = 15000) {
+        let fired = false;
+        const finish = () => {
+            if (fired)
+                return;
+            fired = true;
+            done();
+        };
+        if (!this.settings.voice || !this.supportsVoice || !text) {
+            window.setTimeout(finish, 500);
+            return;
+        }
+        try {
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = this.settings.rate;
+            u.pitch = 0.95;
+            u.volume = Math.min(1, this.settings.volume + 0.3);
+            const v = this.pickVoice();
+            if (v)
+                u.voice = v;
+            u.onend = finish;
+            u.onerror = finish;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(u);
+            // Belt and braces: some mobile browsers never fire onend. Fall back to
+            // an estimate of how long the line takes to say at the current rate.
+            const words = text.trim().split(/\s+/).length;
+            const estimateMs = (words / (2.6 * this.settings.rate)) * 1000 + 1500;
+            window.setTimeout(finish, Math.min(maxMs, estimateMs));
+        }
+        catch {
+            window.setTimeout(finish, 500);
+        }
+    }
+    /**
+     * Speak a number in the count ("two… three… four"). Spoken slightly faster
+     * than the cues and queued rather than interrupting, so the counting sits
+     * behind "breathe in" instead of cutting it off.
+     */
+    speakCount(n) {
+        if (!this.settings.voice || !this.supportsVoice)
+            return;
+        try {
+            // If the engine is still working through an earlier utterance, skip this
+            // number rather than queueing it. A backlog would drift further and
+            // further behind the circle, which is worse than a missing count.
+            if (window.speechSynthesis.pending)
+                return;
+            const u = new SpeechSynthesisUtterance(String(n));
+            u.rate = Math.min(1.4, this.settings.rate + 0.15);
+            u.pitch = 0.9;
+            u.volume = Math.min(1, this.settings.volume + 0.15);
+            const v = this.pickVoice();
+            if (v)
+                u.voice = v;
+            window.speechSynthesis.speak(u);
+        }
+        catch {
+            /* ignore */
+        }
+    }
+    /**
+     * A short pip on each counted second.
+     *
+     * This is the count you can always hear: it is generated audio, so unlike the
+     * spoken numbers it does not depend on the device having a speech engine, on
+     * the browser's speech queue behaving, or on the voice being switched on.
+     * The last beat of a phase is pitched higher so you can feel the change
+     * coming before it arrives.
+     */
+    countTick(isLast = false) {
+        if (!this.settings.tones || !this.ctx || !this.master)
+            return;
+        this.tone(isLast ? 1174.66 : 880, 0.12, isLast ? 0.13 : 0.09);
+    }
+    /** Plays one of everything, so people can check their sound is working. */
+    testCue() {
+        this.startPhaseTone('inhale', 3);
+        this.speak('Breathe in', true);
+        window.setTimeout(() => this.countTick(), 900);
+        window.setTimeout(() => this.speakCount(2), 1000);
+        window.setTimeout(() => this.countTick(), 1900);
+        window.setTimeout(() => this.speakCount(3), 2000);
+    }
+    cancelSpeech() {
+        if (this.supportsVoice) {
+            try {
+                window.speechSynthesis.cancel();
+            }
+            catch {
+                /* ignore */
+            }
+        }
+    }
+    endChime() {
+        if (!this.settings.tones)
+            return;
+        this.tone(523.25, 0.9, 0.14, 0);
+        this.tone(659.25, 0.9, 0.11, 0.12);
+        this.tone(783.99, 1.4, 0.09, 0.24);
+    }
+    startAmbient() {
+        if (!this.ctx || !this.master || this.padGain)
+            return;
+        const ctx = this.ctx;
+        // Soft filtered noise — a "room tone" rather than music.
+        const bufferSize = 2 * ctx.sampleRate;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let last = 0;
+        for (let i = 0; i < bufferSize; i++) {
+            const white = Math.random() * 2 - 1;
+            last = (last + 0.02 * white) / 1.02;
+            data[i] = last * 3.5;
+        }
+        const src = ctx.createBufferSource();
+        src.buffer = buffer;
+        src.loop = true;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 480;
+        const gain = ctx.createGain();
+        gain.gain.value = 0;
+        src.connect(filter).connect(gain).connect(this.master);
+        src.start();
+        gain.gain.setTargetAtTime(0.12, ctx.currentTime, 1.2);
+        this.padGain = gain;
+        this.padNodes = [src, filter, gain];
+    }
+    stopAmbient() {
+        if (!this.ctx || !this.padGain)
+            return;
+        const ctx = this.ctx;
+        this.padGain.gain.setTargetAtTime(0, ctx.currentTime, 0.4);
+        const nodes = this.padNodes;
+        window.setTimeout(() => {
+            nodes.forEach((n) => {
+                try {
+                    n.stop?.();
+                }
+                catch {
+                    /* ignore */
+                }
+                try {
+                    n.disconnect();
+                }
+                catch {
+                    /* ignore */
+                }
+            });
+        }, 1200);
+        this.padGain = null;
+        this.padNodes = [];
+    }
+    dispose() {
+        this.cancelSpeech();
+        this.stopAmbient();
+        this.stopPhaseTone(0.05);
+        try {
+            this.ctx?.close();
+        }
+        catch {
+            /* ignore */
+        }
+        this.ctx = null;
+        this.master = null;
+    }
+    listVoices() {
+        if (!this.supportsVoice)
+            return [];
+        try {
+            return window.speechSynthesis.getVoices().filter((v) => v.lang.startsWith('en'));
+        }
+        catch {
+            return [];
+        }
+    }
+    pickVoice() {
+        const voices = this.listVoices();
+        if (!voices.length)
+            return null;
+        if (this.settings.voiceURI) {
+            const found = voices.find((v) => v.voiceURI === this.settings.voiceURI);
+            if (found)
+                return found;
+        }
+        // Prefer a local, natural-sounding English voice when one exists.
+        const preferred = ['Samantha', 'Google UK English Female', 'Serena', 'Karen', 'Moira'];
+        for (const name of preferred) {
+            const found = voices.find((v) => v.name === name);
+            if (found)
+                return found;
+        }
+        return voices.find((v) => v.localService) ?? voices[0];
+    }
+    tone(freq, dur, peak, delay = 0) {
+        if (!this.ctx || !this.master)
+            return;
+        const ctx = this.ctx;
+        const t0 = ctx.currentTime + delay;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        // Scheduled rather than set directly, so delayed notes (the end chime)
+        // are correct and the value is observable to tests.
+        osc.frequency.setValueAtTime(freq, t0);
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), t0 + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        osc.connect(gain).connect(this.master);
+        osc.start(t0);
+        osc.stop(t0 + dur + 0.05);
+    }
+    blip() {
+        if (!this.ctx || !this.master)
+            return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        gain.gain.value = 0.0001;
+        osc.connect(gain).connect(this.master);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.02);
+    }
+}
+
+/* Vanilla-JS player for preview.html.
+   Mirrors src/components/BreathPlayer.tsx using the same engine + audio,
+   including the one-CSS-transition-per-phase animation. */
+(function () {
+  var audio = new BreathAudio();
+  var PHASE_COLOR = {
+    inhale: 'var(--inhale)',
+    hold: 'var(--hold)',
+    exhale: 'var(--exhale)',
+    rest: 'var(--rest)',
+  };
+  var PHASE_EASE = {
+    inhale: 'cubic-bezier(0.37, 0, 0.28, 1)',
+    exhale: 'cubic-bezier(0.5, 0, 0.35, 1)',
+    hold: 'linear',
+    rest: 'cubic-bezier(0.4, 0, 0.4, 1)',
+  };
+
+  var state = {
+    slug: 'box-breathing',
+    minutes: 2,
+    status: 'ready',
+    elapsed: 0,
+    settingsOpen: false,
+    prefs: {
+      theme: 'system',
+      motion: 'auto',
+      textScale: 100,
+      voice: true,
+      tones: true,
+      ambient: false,
+      endChime: true,
+      volume: 0.6,
+      rate: 0.85,
+      showCountdown: true,
+      countAloud: true,
+      countTicks: true,
+      countStyle: 'up',
+      haptics: true,
+      audioOnly: false,
+      paceScale: 1,
+    },
+  };
+  var timeline = null;
+  var raf = null;
+  var startedAt = 0;
+  var offset = 0;
+  var lastIndex = -1;
+  var lastCount = -1;
+  var began = false;
+  var root = document.getElementById('app');
+
+  function technique() {
+    return TECHNIQUES.filter(function (t) { return t.slug === state.slug; })[0];
+  }
+
+  function applyPrefs() {
+    var d = document.documentElement;
+    d.dataset.theme = state.prefs.theme;
+    var m = state.prefs.motion;
+    if (m === 'auto' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) m = 'reduced';
+    d.dataset.motion = m;
+    d.style.setProperty('--text-scale', String(state.prefs.textScale / 100));
+    audio.update({
+      voice: state.prefs.voice,
+      tones: state.prefs.tones,
+      ambient: state.prefs.ambient && state.status === 'running',
+      volume: state.prefs.volume,
+      rate: state.prefs.rate,
+      voiceURI: '',
+    });
+  }
+
+  function rebuild() {
+    timeline = buildTimeline(technique(), state.minutes * 60, state.prefs.paceScale);
+  }
+
+  function announce(msg) {
+    var el = document.getElementById('live');
+    if (el) el.textContent = msg;
+  }
+
+  function animateCircle(step, remaining, seed) {
+    var el = document.querySelector('.pacer');
+    if (!el) return;
+    if (seed) {
+      el.style.transitionDuration = '0ms';
+      el.style.transform = 'scale(' + step.fromScale + ')';
+      void el.offsetWidth;
+    }
+    el.style.transitionTimingFunction = PHASE_EASE[step.phase.kind] || 'ease-in-out';
+    el.style.transitionDuration = Math.max(0, remaining) + 's';
+    el.style.transform = 'scale(' + step.toScale + ')';
+  }
+
+  function tick() {
+    var elapsed = (performance.now() - startedAt) / 1000 + offset;
+    state.elapsed = elapsed;
+    if (elapsed >= timeline.duration) { finish(); return; }
+
+    var pos = positionAt(timeline, elapsed);
+    var s = pos.step;
+    var player = document.querySelector('.player');
+
+    if (s && s.index !== lastIndex) {
+      lastIndex = s.index;
+      lastCount = -1;
+      if (player) player.style.setProperty('--phase-color', PHASE_COLOR[s.phase.kind]);
+      animateCircle(s, s.end - elapsed, true);
+      var label = document.getElementById('phase-label');
+      if (label) label.textContent = s.phase.label;
+      audio.cue(s.phase, undefined, s.end - s.start);
+      announce(s.phase.label + '. ' + Math.round(s.end - s.start) + ' seconds.');
+      if (state.prefs.haptics && navigator.vibrate) {
+        try { navigator.vibrate(s.phase.kind === 'inhale' ? [90] : [40]); } catch (e) {}
+      }
+    }
+
+    var count = document.querySelector('[data-pacer-count]');
+    if (count) count.textContent = String(state.prefs.countStyle === 'up' ? pos.countUp : pos.countdown);
+    var fill = document.getElementById('progress-fill');
+    if (fill) fill.style.transform = 'scaleX(' + elapsed / timeline.duration + ')';
+    var pbar = document.querySelector('[data-pacer-bar]');
+    if (pbar) pbar.style.width = Math.round(pos.progress * 100) + '%';
+    var meta = document.getElementById('time-left');
+    if (meta && s) {
+      meta.textContent = formatClock(timeline.duration - elapsed) + ' left · breath ' + s.cycle + ' of ' + timeline.cycles;
+    }
+
+    // Count pips + spoken numbers.
+    if (s && (state.prefs.countAloud || state.prefs.countTicks)) {
+      var span = s.end - s.start;
+      var total = Math.max(1, Math.round(span));
+      var remaining = s.end - (s.start + pos.secondIndex);
+      if (span >= 2 && pos.secondIndex >= 1 && pos.secondIndex !== lastCount && remaining >= 0.35) {
+        lastCount = pos.secondIndex;
+        if (state.prefs.countTicks) audio.countTick(pos.secondIndex >= total - 1);
+        if (state.prefs.countAloud && state.prefs.voice && remaining >= 0.6) {
+          audio.speakCount(state.prefs.countStyle === 'up'
+            ? Math.min(pos.secondIndex + 1, total)
+            : Math.max(1, total - pos.secondIndex));
+        }
+      }
+    }
+
+    raf = requestAnimationFrame(tick);
+  }
+
+  function beginNow() {
+    if (began) return;
+    began = true;
+    lastIndex = -1;
+    lastCount = -1;
+    offset = 0;
+    state.elapsed = 0;
+    startedAt = performance.now();
+    state.status = 'running';
+    if (state.prefs.ambient) audio.startAmbient();
+    render();
+    raf = requestAnimationFrame(tick);
+  }
+
+  function start() {
+    audio.resume().then(function () {
+      applyPrefs();
+      rebuild();
+      began = false;
+      state.elapsed = 0;
+      state.status = 'lead';
+      announce(technique().name + ', ' + state.minutes + ' minutes. ' + technique().intro);
+      render();
+      audio.speakThen(technique().intro, beginNow);
+    });
+  }
+
+  function pause() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    offset = state.elapsed;
+    var el = document.querySelector('.pacer');
+    if (el) {
+      var cur = getComputedStyle(el).transform;
+      el.style.transitionDuration = '0ms';
+      el.style.transform = cur === 'none' ? 'scale(0.3)' : cur;
+    }
+    state.status = 'paused';
+    audio.cancelSpeech();
+    audio.stopPhaseTone(0.15);
+    audio.stopAmbient();
+    announce('Paused.');
+    render();
+  }
+
+  function resume() {
+    audio.resume().then(function () {
+      if (state.prefs.ambient) audio.startAmbient();
+      startedAt = performance.now();
+      lastCount = -1;
+      state.status = 'running';
+      render();
+      var pos = positionAt(timeline, state.elapsed);
+      if (pos.step) {
+        lastIndex = pos.step.index;
+        animateCircle(pos.step, pos.step.end - state.elapsed, false);
+      } else {
+        lastIndex = -1;
+      }
+      announce('Resumed.');
+      raf = requestAnimationFrame(tick);
+    });
+  }
+
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    audio.cancelSpeech();
+    audio.stopPhaseTone(0.15);
+    audio.stopAmbient();
+    offset = 0;
+    state.elapsed = 0;
+    lastIndex = -1;
+    began = false;
+    state.status = 'ready';
+    announce('Stopped.');
+    render();
+  }
+
+  function finish() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    state.status = 'done';
+    audio.stopAmbient();
+    audio.stopPhaseTone(0.4);
+    if (state.prefs.endChime) audio.endChime();
+    if (state.prefs.voice) setTimeout(function () { audio.speak(technique().outro, true); }, 900);
+    announce('Session complete.');
+    render();
+  }
+
+  function settingsHtml() {
+    var p = state.prefs;
+    function sw(key, label) {
+      return '<label class="switch"><span>' + label + '</span>' +
+        '<input type="checkbox" data-pref="' + key + '"' + (p[key] ? ' checked' : '') + '></label>';
+    }
+    function choices(key, label, opts) {
+      return '<div class="field"><span id="' + key + '-l">' + label + '</span><div class="choices" role="group" aria-labelledby="' + key + '-l">' +
+        opts.map(function (o) {
+          return '<button type="button" class="btn" data-choice="' + key + '" data-value="' + o[0] + '" aria-pressed="' + (String(p[key]) === String(o[0])) + '">' + o[1] + '</button>';
+        }).join('') + '</div></div>';
+    }
+    return '<div class="wrap narrow" style="padding-block:var(--s-5)"><div class="settings">' +
+      '<fieldset class="fieldset"><legend>Sound</legend>' +
+      sw('voice', 'Voice guidance') + sw('countAloud', 'Count the seconds out loud') +
+      sw('countTicks', 'Count with a beat') +
+      sw('tones', 'Tones') + sw('ambient', 'Background hum') + sw('endChime', 'Chime at the end') +
+      '<div class="field"><label for="vol">Volume</label><input id="vol" type="range" min="0" max="1" step="0.05" value="' + p.volume + '" data-range="volume"></div>' +
+      '<div class="field"><label for="rate">Speaking speed</label><input id="rate" type="range" min="0.6" max="1.2" step="0.05" value="' + p.rate + '" data-range="rate"></div>' +
+      '<button type="button" class="btn" id="testsound">Test the sound</button>' +
+      '</fieldset>' +
+      '<fieldset class="fieldset"><legend>Display</legend>' +
+      choices('theme', 'Theme', [['system', 'System'], ['light', 'Light'], ['dark', 'Dark'], ['contrast', 'High contrast']]) +
+      choices('textScale', 'Text size', [[100, '100%'], [112, '112%'], [125, '125%'], [150, '150%'], [175, '175%']]) +
+      choices('motion', 'Movement', [['auto', 'Animated circle'], ['reduced', 'Still, with a bar']]) +
+      choices('countStyle', 'Counting', [['up', 'Count up'], ['down', 'Count down']]) +
+      sw('audioOnly', 'Audio-only mode') + sw('showCountdown', 'Show the number') +
+      '</fieldset>' +
+      '<fieldset class="fieldset"><legend>Access</legend>' +
+      sw('haptics', 'Vibrate on each change') +
+      '<div class="field"><label for="pace">Pace</label><input id="pace" type="range" min="0.7" max="1.4" step="0.05" value="' + p.paceScale + '" data-range="paceScale"></div>' +
+      '</fieldset></div></div>';
+  }
+
+  function render() {
+    rebuild();
+    var t = technique();
+    var html = '<div class="player" data-dim="' + (state.prefs.audioOnly && state.status === 'running') + '" style="--phase-color:var(--inhale)">';
+
+    html += '<div class="player-bar wrap">' +
+      '<label class="sr-only" for="pick">Technique</label>' +
+      '<select id="pick" style="max-width:15rem">' +
+      TECHNIQUES.map(function (x) {
+        return '<option value="' + x.slug + '"' + (x.slug === state.slug ? ' selected' : '') + '>' + x.name + '</option>';
+      }).join('') + '</select>' +
+      '<button type="button" class="btn btn-ghost" id="settings-toggle" style="margin-left:auto" aria-expanded="' + state.settingsOpen + '">' +
+      (state.settingsOpen ? 'Done' : 'Settings') + '</button></div>';
+
+    if (state.settingsOpen) html += settingsHtml();
+    html += '<div class="sr-only" id="live" role="status" aria-live="polite" aria-atomic="true"></div>';
+    html += '<main class="player-main" id="main">';
+
+    if (state.status === 'ready') {
+      html += '<span class="eyebrow">' + t.bpm + '</span>';
+      html += '<h1 style="margin-bottom:0">' + t.name + '</h1><p class="phase-instruction">' + t.intro + '</p>';
+      html += '<div class="field" style="max-width:30rem;width:100%"><div class="choices" role="group" aria-label="Session length" style="justify-content:center">' +
+        t.minuteOptions.map(function (m) {
+          return '<button type="button" class="btn" data-minutes="' + m + '" aria-pressed="' + (state.minutes === m) + '">' + m + ' min</button>';
+        }).join('') + '</div></div>';
+      html += '<button type="button" class="btn btn-primary btn-lg" id="begin">Begin</button>';
+      html += '<p class="player-meta">' + timeline.cycles + ' breaths · <kbd>Space</kbd> to start or pause · <kbd>Esc</kbd> to stop</p>';
+    } else if (state.status === 'lead') {
+      html += '<h1 style="margin-bottom:0">' + t.name + '</h1><p class="lede" style="max-width:34rem">' + t.intro + '</p>';
+      html += '<p class="player-meta">Get comfortable. The first breath starts in a moment.</p>';
+      html += '<div class="player-controls"><button type="button" class="btn btn-primary btn-lg" id="startnow">Start now</button>' +
+        '<button type="button" class="btn btn-lg" id="stop">Cancel</button></div>';
+    } else if (state.status === 'done') {
+      html += '<h1 style="margin-bottom:0">Done.</h1><p class="lede" style="max-width:32rem">' + t.outro + '</p>';
+      html += '<p class="player-meta">' + timeline.cycles + ' breaths over ' + formatClock(timeline.duration) + '</p>';
+      html += '<div class="player-controls"><button type="button" class="btn btn-primary btn-lg" id="begin">Go again</button></div>';
+      html += '<aside class="ad-slot"><span class="ad-label">Advertisement</span><div class="ad-frame">Only ever here, after the session.</div></aside>';
+    } else {
+      html += '<div class="pacer-wrap"><div class="pacer-ring" aria-hidden="true"></div>' +
+        '<div class="pacer" aria-hidden="true"></div>' +
+        (state.prefs.showCountdown ? '<div class="pacer-label" aria-hidden="true"><span class="pacer-count" data-pacer-count>&nbsp;</span></div>' : '') +
+        '<div class="pacer-bar" aria-hidden="true"><div data-pacer-bar></div></div></div>';
+      html += '<p class="phase-label" id="phase-label"></p>';
+      html += '<div class="player-progress" role="progressbar" aria-label="Session progress"><div id="progress-fill" style="transform:scaleX(0)"></div></div>';
+      html += '<p class="player-meta" id="time-left"></p>';
+      html += '<div class="player-controls">' +
+        (state.status === 'running'
+          ? '<button type="button" class="btn btn-lg" id="pause">Pause</button>'
+          : '<button type="button" class="btn btn-primary btn-lg" id="resume">Resume</button>') +
+        '<button type="button" class="btn btn-lg" id="stop">End</button></div>';
+    }
+
+    html += '</main></div>';
+    root.innerHTML = html;
+    applyPrefs();
+    wire();
+  }
+
+  function wire() {
+    var pick = document.getElementById('pick');
+    if (pick) pick.onchange = function () { state.slug = pick.value; state.minutes = technique().defaultMinutes; stop(); };
+    var st = document.getElementById('settings-toggle');
+    if (st) st.onclick = function () { state.settingsOpen = !state.settingsOpen; render(); };
+    var begin = document.getElementById('begin');
+    if (begin) begin.onclick = start;
+    var sn = document.getElementById('startnow');
+    if (sn) sn.onclick = beginNow;
+    var p = document.getElementById('pause');
+    if (p) p.onclick = pause;
+    var r = document.getElementById('resume');
+    if (r) r.onclick = resume;
+    var s = document.getElementById('stop');
+    if (s) s.onclick = stop;
+    var ts = document.getElementById('testsound');
+    if (ts) ts.onclick = function () { audio.resume().then(function () { audio.testCue(); }); };
+    Array.prototype.forEach.call(document.querySelectorAll('[data-minutes]'), function (b) {
+      b.onclick = function () { state.minutes = Number(b.dataset.minutes); render(); };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-pref]'), function (b) {
+      b.onchange = function () { state.prefs[b.dataset.pref] = b.checked; applyPrefs(); render(); };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-choice]'), function (b) {
+      b.onclick = function () {
+        var v = b.dataset.value;
+        state.prefs[b.dataset.choice] = isNaN(Number(v)) ? v : Number(v);
+        applyPrefs();
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-range]'), function (b) {
+      b.oninput = function () { state.prefs[b.dataset.range] = Number(b.value); applyPrefs(); };
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    var tag = e.target && e.target.tagName;
+    if ((tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') && e.key !== 'Escape') return;
+    if (e.key === ' ' || e.key === 'k') {
+      e.preventDefault();
+      if (state.status === 'running') pause();
+      else if (state.status === 'paused') resume();
+      else if (state.status === 'lead') beginNow();
+      else start();
+    } else if (e.key === 'Escape') {
+      stop();
+    } else if (e.key === 's') {
+      state.settingsOpen = !state.settingsOpen;
+      render();
+    }
+  });
+
+  window.__breathe = {
+    state: state,
+    start: start,
+    beginNow: beginNow,
+    stop: stop,
+    seek: function (secs) { offset = secs; startedAt = performance.now(); },
+    position: function () { return positionAt(timeline, state.elapsed); },
+    setTechnique: function (slug) { state.slug = slug; render(); },
+  };
+
+  render();
+})();
+
+</script>
+</body>
+</html>

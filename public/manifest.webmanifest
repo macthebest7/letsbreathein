@@ -1,0 +1,12 @@
+{
+  "name": "Breathe — guided breathing exercises",
+  "short_name": "Breathe",
+  "description": "Free guided breathing exercises with voice and sound, built to be accessible.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a1110",
+  "theme_color": "#0a1110",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

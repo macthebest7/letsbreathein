@@ -1,0 +1,24 @@
+# dependencies
+node_modules
+
+# next.js
+.next
+out
+next-env.d.ts
+*.tsbuildinfo
+
+# environment — never commit real keys or the contact address
+.env*.local
+
+# generated preview + test artefacts
+# preview.html and preview-site.html ARE committed: they are useful standalone
+# deliverables (open them in any browser, no install needed) and small.
+shots/
+
+# transfer artefacts from the build machine
+breathe-update.zip
+breathe-site.zip
+
+# os
+.DS_Store
+Thumbs.db
