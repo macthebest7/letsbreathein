@@ -45,6 +45,7 @@ node tools/check-pacer.mjs        # samples the circle through a full cycle
 node tools/check-audio.mjs        # spoken cues, count pips, tone lengths
 node tools/check-responsive.mjs   # overflow at 320–1440 on home and player
 node tools/check-contrast.mjs     # WCAG contrast for every pair in all 3 themes
+node tools/check-adsense.mjs      # the automated half of ADSENSE-CHECKLIST.md
 ```
 
 `check-contrast.mjs` exits non-zero if any pair drops below AA, so it can go in CI. The

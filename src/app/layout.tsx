@@ -4,14 +4,28 @@ import PrefsProvider from '@/components/PrefsProvider';
 import ConsentBanner from '@/components/ConsentBanner';
 import { SITE } from '@/lib/site';
 
+/**
+ * AdSense verifies site ownership by looking for one of: the ad script in the
+ * <head>, an ads.txt entry, or this meta tag.
+ *
+ * The meta tag is the right choice here. Our ad script deliberately does not
+ * load until a visitor accepts the consent banner, so a reviewer's crawler
+ * might never see it — and loading a tracking script before consent purely to
+ * pass a review would be the wrong trade. This tag carries no cookies and no
+ * script, so it can be present unconditionally once a publisher ID exists.
+ */
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: 'Breathe — free guided breathing exercises for stress, sleep and focus',
+    // 41 chars. This is the fallback for any page that forgets its own title,
+    // so it has to fit inside the ~60-char display limit on its own.
+    default: 'Breathe — free guided breathing exercises',
     template: '%s | Breathe',
   },
   description:
-    'Free guided breathing exercises with voice and sound. Box breathing, 4-7-8, coherent breathing and more, chosen by what you are dealing with. Built to be usable with a screen reader, a keyboard, or your eyes closed.',
+    'Free guided breathing exercises with voice and sound. Box breathing, 4-7-8, coherent breathing and more, chosen by what you are dealing with.',
   applicationName: 'Breathe',
   keywords: [
     'breathing exercises',
@@ -34,6 +48,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
   icons: { icon: '/icon.svg', apple: '/icon.svg' },
   twitter: { card: 'summary_large_image' },
+  ...(ADSENSE_CLIENT ? { other: { 'google-adsense-account': ADSENSE_CLIENT } } : {}),
   robots: { index: true, follow: true },
   alternates: { canonical: '/' },
 };

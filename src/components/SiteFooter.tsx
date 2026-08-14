@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { TECHNIQUES } from '@/lib/techniques';
+import { ISSUES, TECHNIQUES } from '@/lib/techniques';
 
 export default function SiteFooter() {
   const year = new Date().getFullYear();
@@ -46,6 +46,16 @@ export default function SiteFooter() {
               {TECHNIQUES.slice(0, 5).map((t) => (
                 <li key={t.slug}>
                   <Link href={`/techniques/${t.slug}`}>{t.name}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <strong>By situation</strong>
+            <ul>
+              {ISSUES.slice(0, 5).map((i) => (
+                <li key={i.id}>
+                  <Link href={`/breathing-exercises-for/${i.landing.slug}`}>{i.label}</Link>
                 </li>
               ))}
             </ul>

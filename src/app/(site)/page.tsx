@@ -91,7 +91,11 @@ export default function HomePage() {
           {lead.map((issue) => {
             const count = techniquesForIssue(issue.id).length;
             return (
-              <Link key={issue.id} className="card" href={`/techniques?for=${issue.id}`}>
+              <Link
+                key={issue.id}
+                className="card"
+                href={`/breathing-exercises-for/${issue.landing.slug}`}
+              >
                 <h3>{issue.question}</h3>
                 <p className="small muted" style={{ marginBottom: 0 }}>
                   {issue.blurb}

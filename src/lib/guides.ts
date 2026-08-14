@@ -43,6 +43,236 @@ export interface Guide {
 
 export const GUIDES: Guide[] = [
   {
+    slug: 'how-to-calm-down-quickly',
+    title: 'How to calm down quickly',
+    standfirst:
+      'What to do in the ninety seconds before you have to speak, answer, or hold it together — and why "take a deep breath" is bad advice.',
+    summary:
+      'Practical ways to calm down in under two minutes, why deep breathing often backfires, and what to do when you have no privacy at all.',
+    minutes: 5,
+    updated: '2026-08-14',
+    sources: ['balban-2023'],
+    related: ['breathing-at-work', 'getting-started'],
+    blocks: [
+      {
+        p: [
+          'Most advice about calming down assumes time you do not have. You are about to walk into a room, or someone has just said something, or the call connects in ninety seconds. What can actually be done in that window?',
+          'More than you would think, but not by doing the obvious thing.',
+        ],
+      },
+      {
+        h: 'Why “take a deep breath” is the wrong instruction',
+        p: [
+          'It is the most repeated piece of advice in the world and it is close to backwards. A big deep breath is an in-breath, and the in-breath is the half of the cycle that speeds your heart up rather than slowing it down.',
+          'Worse, when you are already agitated you are probably over-breathing slightly. Adding a deliberate deep breath on top lowers your carbon dioxide further, which produces light-headedness, tingling fingers and a faint sense of unreality — all of which your brain then reads as more evidence that something is wrong.',
+          'The useful instruction is almost the opposite: a long, unhurried breath *out*.',
+        ],
+      },
+      {
+        h: 'The thirty-second version',
+        ol: [
+          'Breathe in through your nose until your lungs feel comfortably full.',
+          'Without breathing out, sip a second, smaller breath in through your nose.',
+          'Let a long, slow breath out through your mouth until you are empty.',
+          'Repeat twice more.',
+        ],
+        p: [
+          'That is the physiological sigh, and it is the fastest thing on this site. You already do it involuntarily — it is the shuddering double breath after crying. Doing it deliberately is one of the few things that produces a noticeable shift in under a minute.',
+          'In a 2023 randomised comparison of breathing practices, five minutes a day of this pattern produced the largest improvement in daily mood of the four approaches tested. That is a study about daily practice rather than emergencies, but it is the most direct evidence available that this specific pattern does something.',
+        ],
+        techniques: ['physiological-sigh'],
+      },
+      {
+        h: 'The two-minute version',
+        p: [
+          'If you have a little longer, a fixed pattern gives your attention somewhere to be. Three to five rounds of four seconds in, four holding, six out is the standard pre-performance choice — long enough to take the edge off, structured enough to interrupt a spiral.',
+          'Do it sitting or standing tall with your eyes open. Part of the value is that it becomes a ritual: the same three breaths before every difficult moment, so the pattern itself starts carrying the association.',
+        ],
+        techniques: ['tactical-reset'],
+      },
+      {
+        h: 'When you have no privacy at all',
+        p: [
+          'Box breathing is invisible. Nothing about your posture changes, your face does nothing unusual, and you can do it in a meeting, in a queue, or across a table from the person who is upsetting you.',
+          'If even that is too much, just extend one out-breath. One slow exhale is not nothing, and it is available anywhere.',
+        ],
+        techniques: ['box-breathing'],
+      },
+      {
+        note: {
+          title: 'If this is happening a lot',
+          body: 'Needing to calm yourself down several times a day is worth paying attention to, and it is information about your situation rather than a personal failing. Breathing exercises are a coping tool, not a fix for a workload, a relationship or an untreated anxiety problem. If it is frequent, a GP is a reasonable next step.',
+        },
+      },
+    ],
+  },
+  {
+    slug: 'nose-or-mouth-breathing',
+    title: 'Nose or mouth — does it matter?',
+    standfirst:
+      'What nasal breathing actually does, which claims about it are overstated, and when the mouth is the right answer.',
+    summary:
+      'Whether to breathe through your nose or mouth during breathing exercises, what nasal breathing genuinely does, and which popular claims are oversold.',
+    minutes: 5,
+    updated: '2026-08-14',
+    sources: ['zaccaro-2018'],
+    related: ['getting-started', 'how-breathing-affects-your-body'],
+    blocks: [
+      {
+        p: [
+          'Nasal breathing has become a topic with unusually confident advocates, some of whom promise a great deal. Here is what is reasonably established, what is plausible, and what is oversold.',
+        ],
+      },
+      {
+        h: 'What your nose actually does',
+        p: [
+          'It filters particles, warms and humidifies air before it reaches your lungs, and adds resistance — you cannot move air through your nose as fast as through your mouth. That resistance is why nasal breathing naturally slows you down, which for the purposes of this site is the entire point.',
+          'The nose also produces nitric oxide, which is carried into the lungs on the in-breath and helps with the matching of airflow to blood flow. This is real physiology rather than wellness folklore.',
+        ],
+      },
+      {
+        h: 'What is oversold',
+        p: [
+          'Nasal breathing does not transform athletic performance, reshape the adult face, or resolve sleep problems. Claims along those lines go well beyond what the evidence supports — much of the popular writing extrapolates from small studies, or from genuine clinical findings in specific patient groups, to sweeping claims about everyone.',
+          'The honest summary is that nasal breathing is a sensible default with modest, real benefits — not a transformation.',
+        ],
+      },
+      {
+        h: 'What to do during a breathing exercise',
+        ul: [
+          'In through the nose for almost everything. The resistance helps you slow down, and the air arriving in your lungs is better conditioned.',
+          'Out through the nose for slow practices like coherent breathing, where the aim is a quiet, even, effortless rhythm.',
+          'Out through pursed lips when you want a longer, more controlled exhale — extended exhale, 4-7-8, pursed-lip breathing. The narrowed opening gives you something physical to meter the breath against.',
+          'Out through the mouth whenever a nose exhale feels like work, or your nose is blocked.',
+        ],
+      },
+      {
+        h: 'If your nose is blocked',
+        p: [
+          'Do not force it. Forcing air through a congested nostril is uncomfortable, noisy and distracting, and none of that is compatible with settling. Breathe through your mouth and slow the pace instead — the pace is doing the work, not the route.',
+          'The one exception is the nostril-specific practices, which simply do not work with a blocked nose. Skip them until it clears.',
+        ],
+        techniques: ['alternate-nostril-breathing', 'moon-breathing'],
+      },
+      {
+        note: {
+          title: 'Worth mentioning to a doctor',
+          body: 'A nose that is blocked most of the time, breathing through your mouth while asleep, loud snoring with pauses, or waking with a dry mouth and headache are all worth raising with a clinician. There are treatable causes, and a breathing exercise is not one of the treatments.',
+        },
+      },
+    ],
+  },
+  {
+    slug: 'breathing-before-you-speak',
+    title: 'Breathing before a presentation or interview',
+    standfirst:
+      'A short routine for the minutes before you have to perform — and why the voice shakes in the first place.',
+    summary:
+      'What to do in the minutes before a presentation, interview or exam: a short breathing routine, why your voice shakes, and what breathing cannot fix.',
+    minutes: 5,
+    updated: '2026-08-14',
+    related: ['how-to-calm-down-quickly', 'breathing-at-work'],
+    blocks: [
+      {
+        p: [
+          'The physical symptoms of performance nerves are mostly a breathing problem wearing a disguise. Understanding that makes them a little less alarming, and gives you something concrete to do.',
+        ],
+      },
+      {
+        h: 'Why your voice shakes',
+        p: [
+          'Your voice is powered by a controlled stream of air passing over the vocal folds. When you are nervous, breathing moves up into the chest and becomes fast and shallow, so that stream becomes short and uneven — and an uneven airstream is exactly what a shaky voice is.',
+          'The dry mouth, the tight throat and the sense that you cannot get a full breath all come from the same place. None of it means anything has gone wrong; it is a normal stress response arriving at an inconvenient moment.',
+        ],
+      },
+      {
+        h: 'The ten minutes before',
+        ol: [
+          'Find somewhere you can sit. A corridor, a stairwell, a parked car.',
+          'Three to five rounds of four in, four holding, six out. Eyes open, sitting tall.',
+          'Between rounds, let your jaw hang slack for a moment — people clench without noticing, and a clenched jaw affects the voice.',
+          'Stop while you still feel alert. The aim is steady, not relaxed.',
+        ],
+        techniques: ['tactical-reset'],
+      },
+      {
+        h: 'The sixty seconds before',
+        p: [
+          'Two or three physiological sighs — two breaths in, one long breath out. Then one deliberate exhale as you walk in, so you start on an out-breath rather than a gulp.',
+          'Speakers and singers do a version of this instinctively. Starting on a settled exhale gives your first sentence a steady airstream, which is when the shake would otherwise be most obvious.',
+        ],
+        techniques: ['physiological-sigh'],
+      },
+      {
+        h: 'What breathing will not do',
+        p: [
+          'It will not make you well prepared, and it will not remove the nerves. Some arousal is useful — completely calm speakers are usually flat ones. The aim is to bring an over-revved system down to a workable level, not to switch it off.',
+          'If performance anxiety is severe enough to affect your work or make you avoid opportunities, that is a treatable thing worth talking to someone about rather than breathing through indefinitely.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'why-cant-i-take-a-deep-breath',
+    title: 'Why can’t I take a deep breath?',
+    standfirst:
+      'The feeling of not being able to fill your lungs is common, frightening and usually not what it seems. What it often is, and when to get it checked.',
+    summary:
+      'The feeling of not being able to take a satisfying deep breath: what commonly causes it, why it self-reinforces, and the signs that mean see a doctor.',
+    minutes: 6,
+    updated: '2026-08-14',
+    sources: ['zaccaro-2018'],
+    related: ['how-breathing-affects-your-body', 'getting-started'],
+    blocks: [
+      {
+        note: {
+          title: 'Read this first',
+          body: 'If breathlessness is sudden or severe, or comes with chest pain, blue lips, confusion or fainting, treat it as an emergency and call your local emergency number. This page is about a persistent, low-grade feeling of not being able to breathe deeply enough — not about acute breathlessness.',
+          warn: true,
+        },
+      },
+      {
+        p: [
+          'It is a strange and unsettling sensation: you can breathe, the air is going in and out, but no breath feels like it properly lands. People describe it as air hunger, or as needing to yawn constantly to get one satisfying breath.',
+          'It is common, and it is frightening precisely because breathing is the thing you are least willing to have go wrong. It is also, in a large proportion of cases, not a problem with your lungs.',
+        ],
+      },
+      {
+        h: 'Why it is often self-reinforcing',
+        p: [
+          'Here is the loop that catches people. The feeling makes you try to take a bigger breath. Bigger breaths lower your carbon dioxide. Low carbon dioxide produces light-headedness, tingling and — crucially — more of the air-hunger feeling. So you try an even bigger breath.',
+          'The way out is counterintuitive and hard to believe while it is happening: breathe *less*, not more. Smaller, slower breaths let carbon dioxide come back up, and the sensation usually eases within a few minutes.',
+          'Anxiety is frequently part of this, but saying so is not the same as saying the feeling is imaginary. The sensation is real and physically generated. It is the interpretation, and the response to it, that make it persist.',
+        ],
+      },
+      {
+        h: 'What to try',
+        p: [
+          'Resist the urge to take a big breath. Set a gentle rhythm instead — four seconds in through the nose, six out, and keep the breaths deliberately small. It will feel insufficient at first. Give it three or four minutes before judging it.',
+          'Do not do fast breathing, and do not do breath-holds, while this is happening. Both make it worse.',
+        ],
+        techniques: ['extended-exhale', 'coherent-breathing'],
+      },
+      {
+        h: 'Other common causes worth knowing about',
+        ul: [
+          'Poor posture and a stiff upper back, which mechanically limit how much the ribcage can move.',
+          'Habitual chest breathing, where the diaphragm has effectively been sidelined by the neck and shoulder muscles.',
+          'The tail end of a chest infection, where the pattern outlasts the illness.',
+          'Reflux, which can produce throat tightness that reads as breathing difficulty.',
+          'Asthma, anaemia, thyroid problems and heart conditions — all of which need a doctor rather than a breathing exercise.',
+        ],
+      },
+      {
+        h: 'When to get it checked',
+        p: [
+          'See a doctor if it is new and persistent, if it is getting worse, if it comes on with exertion when it did not before, if it wakes you at night, or if it comes with chest pain, palpitations, swollen ankles, a cough that will not settle, or unexplained weight loss.',
+          'You do not need to have ruled anything out before asking. "I keep feeling like I cannot get a full breath" is a perfectly good reason to make an appointment, and it is a familiar presentation to any GP.',
+        ],
+      },
+    ],
+  },
+  {
     slug: 'getting-started',
     title: 'A beginner’s guide to breathing exercises',
     standfirst:

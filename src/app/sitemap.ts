@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { SITE } from '@/lib/site';
-import { TECHNIQUES } from '@/lib/techniques';
+import { ISSUES, TECHNIQUES } from '@/lib/techniques';
 import { GUIDES } from '@/lib/guides';
 
 /**
@@ -39,6 +39,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
+    })),
+    ...ISSUES.map((i) => ({
+      url: `${SITE.url}/breathing-exercises-for/${i.landing.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
     })),
     ...GUIDES.map((g) => ({
       url: `${SITE.url}/guides/${g.slug}`,

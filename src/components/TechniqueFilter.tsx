@@ -16,7 +16,7 @@ import { ISSUES, TECHNIQUES, type IssueId } from '@/lib/techniques';
  * items already on the page, so a navigation would be slower and would lose
  * scroll position for nothing.
  */
-export default function TechniqueFilter({ initial }: { initial?: IssueId }) {
+export default function TechniqueFilter({ initial }: { initial?: IssueId } = {}) {
   const [active, setActive] = useState<IssueId | 'all'>(initial ?? 'all');
   const shown =
     active === 'all' ? TECHNIQUES : TECHNIQUES.filter((t) => t.issues.includes(active));

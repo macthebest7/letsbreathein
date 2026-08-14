@@ -35,6 +35,28 @@ export interface Issue {
   question: string;
   blurb: string;
   icon: string;
+  /**
+   * Content for the issue's own landing page.
+   *
+   * These exist because "breathing exercises for sleep" is a real thing people
+   * type, and a client-side filter on /techniques is not a page Google can
+   * rank. Each one has to earn its place with copy that only makes sense for
+   * that situation — nine near-identical pages would be worse than none.
+   */
+  landing: {
+    slug: string;
+    title: string;
+    description: string;
+    h1: string;
+    intro: string[];
+    /** The one to start with, and why. */
+    pickSlug: string;
+    pickWhy: string;
+    /** Guides worth reading alongside. */
+    guides: string[];
+    /** Situation-specific safety note, where one is warranted. */
+    caution?: string;
+  };
 }
 
 export interface Section {
@@ -78,6 +100,22 @@ export const ISSUES: Issue[] = [
     question: 'Stressed at work?',
     blurb: 'Short, discreet resets you can do at your desk with your eyes open.',
     icon: 'briefcase',
+    landing: {
+      slug: "stress",
+      title: "Breathing exercises for stress at work",
+      description:
+        "Discreet breathing exercises you can do at a desk, in an open-plan office, or in the two minutes between meetings. Free, guided, no account.",
+      h1: "Breathing exercises for stress",
+      intro: [
+        "Work stress has an awkward shape. It is low-grade rather than dramatic, it lasts all day rather than arriving in a spike, and you are usually surrounded by people. Most relaxation advice assumes a quiet room and twenty spare minutes, which is not what a Wednesday afternoon looks like.",
+        "What works instead is short and invisible. Every technique below can be done sitting upright with your eyes open, and nobody at the next desk will notice. The ones with holds tend to leave you alert rather than sleepy, which is the right effect during working hours \u2014 save the long-exhale patterns for the end of the day.",
+        "If you have ninety seconds, take the physiological sigh. If you have three minutes and headphones, put them on, turn on audio-only mode so the screen dims, and let the voice do the counting.",
+      ],
+      pickSlug: "box-breathing",
+      pickWhy:
+        "Four equal sides, nothing to remember, and completely undetectable to anyone watching. The two holds stop it tipping into drowsiness.",
+      guides: ["breathing-at-work", "building-a-habit"],
+    },
   },
   {
     id: 'anxiety',
@@ -85,6 +123,24 @@ export const ISSUES: Issue[] = [
     question: 'Feeling anxious or on edge?',
     blurb: 'Longer exhales that gently shift you out of fight-or-flight.',
     icon: 'wave',
+    landing: {
+      slug: "anxiety",
+      title: "Breathing exercises for anxiety",
+      description:
+        "Slow breathing patterns with a longer out-breath, for anxious or on-edge feelings. Free and guided, with honest notes on what breathing can and cannot do.",
+      h1: "Breathing exercises for anxiety",
+      intro: [
+        "When you are anxious your breathing usually gets faster, shallower and higher in the chest without you deciding anything. Slowing it down deliberately is one of the few levers you have over a system that otherwise runs on its own.",
+        "The mechanism is unglamorous: vagal activity rises during the out-breath, so a breath with a long exhale spends more of its cycle on the calming side. Every pattern below applies that idea. None of them require you to breathe deeply \u2014 deep effortful breathing usually makes anxiety worse, not better, and is the single most common mistake.",
+        "Be clear about what this is. Breathing exercises are a coping tool, not a treatment for an anxiety disorder. Paced breathing appears inside evidence-based treatment \u2014 most clearly as one component of CBT for panic \u2014 but that is a different claim from the exercise working on its own.",
+      ],
+      pickSlug: "extended-exhale",
+      pickWhy:
+        "Four seconds in, six out, nothing held. No breath-holding means nothing that can itself feel alarming, which matters if breath awareness makes you tense.",
+      guides: ["how-breathing-affects-your-body", "getting-started"],
+      caution:
+        "If focusing on your breathing makes you feel worse rather than better, that is a recognised reaction and not a personal failing. Keep your eyes open, avoid the patterns with holds, and keep sessions short \u2014 or accept that this tool is not for you.",
+    },
   },
   {
     id: 'panic',
@@ -92,6 +148,24 @@ export const ISSUES: Issue[] = [
     question: 'Panicking or overwhelmed?',
     blurb: 'Simple, slow anchors for when everything feels like too much.',
     icon: 'anchor',
+    landing: {
+      slug: "panic-attacks",
+      title: "Breathing exercises for panic attacks",
+      description:
+        "A simple, slow breathing anchor for panic and overwhelm \u2014 nothing to count, nothing to hold. Plus what to do when breathing is not enough.",
+      h1: "Breathing exercises for panic attacks",
+      intro: [
+        "During a panic attack, complicated instructions are useless. Anything that requires you to remember a four-part pattern is going to fail exactly when you need it. So the technique below has no counting to keep track of, no breath-holding, and no way to get it wrong.",
+        "The most important thing to know is counterintuitive: do not breathe deeply. Many people over-breathe during panic already, and taking big deep breaths makes the tingling, the light-headedness and the chest tightness worse. What helps is slow and small, with the out-breath longer than the in-breath.",
+        "A panic attack is horrible but not dangerous, and it peaks and passes within roughly ten minutes. Following something steady gives your attention somewhere to go while that happens.",
+      ],
+      pickSlug: "panic-anchor",
+      pickWhy:
+        "Built for this specifically. Grounding prompts sit between the breaths, and the visual, the voice and the tone all say the same thing, so you can follow whichever one you can still process.",
+      guides: ["getting-started", "how-breathing-affects-your-body"],
+      caution:
+        "If panic attacks keep happening, breathing exercises are a useful tool but not a treatment \u2014 CBT works well for panic disorder and is worth asking a doctor about. If you are thinking of harming yourself, contact your local emergency number or a crisis line rather than working through it alone.",
+    },
   },
   {
     id: 'sleep',
@@ -99,6 +173,24 @@ export const ISSUES: Issue[] = [
     question: 'Can’t sleep?',
     blurb: 'Wind-down patterns designed to be done lying down in the dark.',
     icon: 'moon',
+    landing: {
+      slug: "sleep",
+      title: "Breathing exercises for sleep",
+      description:
+        "Wind-down breathing patterns designed to be done lying in the dark, with the screen dimmed and the end chime off. Free and guided.",
+      h1: "Breathing exercises for sleep",
+      intro: [
+        "Lying awake compounds itself: the longer you are awake the more frustrating it gets, and frustration is not compatible with falling asleep. Slow breathing helps with the second half of that problem more than the first.",
+        "It is worth being precise about what it is doing. It is not sedating you. It is giving your attention something undemanding to follow instead of replaying the day or rehearsing tomorrow. That is often enough, and it is a smaller claim than most sleep advice makes.",
+        "Set it up so it does not wake you: choose a longer session than you think you need, turn the end chime off in Settings so it fades rather than announces itself, and turn on audio-only mode so the screen dims and you can put the phone face-down.",
+      ],
+      pickSlug: "two-to-one-breathing",
+      pickWhy:
+        "Four in, eight out, nothing held. You get the calming ratio without the seven-second hold in 4-7-8, which some people find unpleasant just as they are trying to settle.",
+      guides: ["breathing-and-sleep", "how-long-should-a-session-be"],
+      caution:
+        "Breathing exercises are not a treatment for insomnia. If you have slept badly for weeks, the treatment with the best evidence is CBT-I, and it is worth asking a doctor about. Loud snoring with pauses, waking with headaches, or falling asleep during the day are worth mentioning to a doctor rather than working around.",
+    },
   },
   {
     id: 'focus',
@@ -106,6 +198,22 @@ export const ISSUES: Issue[] = [
     question: 'Need to focus?',
     blurb: 'Steady, even rhythms used before deep work, exams and surgery.',
     icon: 'target',
+    landing: {
+      slug: "focus",
+      title: "Breathing exercises for focus and concentration",
+      description:
+        "Steady, even breathing rhythms used before deep work, exams and presentations. Free guided sessions with voice and sound.",
+      h1: "Breathing exercises for focus",
+      intro: [
+        "The value here is less about the breathing than about the transition. Most people move from email to deep work with no boundary at all, carrying the last twelve interruptions into the thing that needs uninterrupted attention. Three minutes of a fixed pattern makes a boundary where there was not one.",
+        "There is a second effect worth knowing about. Patterns that take some concentration to follow \u2014 alternate nostril breathing, in particular \u2014 occupy working memory just enough that rumination has nowhere to go. That is not mystical; it is task load doing something useful.",
+        "These are meant to be done sitting upright with your eyes open, so you can go straight from the session into the work rather than needing to surface first.",
+      ],
+      pickSlug: "tactical-reset",
+      pickWhy:
+        "Three to five rounds immediately before the task. Short enough to become a ritual, and the hold keeps it from tipping into relaxation when you want alertness.",
+      guides: ["breathing-at-work", "how-long-should-a-session-be"],
+    },
   },
   {
     id: 'energy',
@@ -113,6 +221,24 @@ export const ISSUES: Issue[] = [
     question: 'Low on energy?',
     blurb: 'Brisker patterns for the mid-afternoon slump. Sitting down only.',
     icon: 'spark',
+    landing: {
+      slug: "low-energy",
+      title: "Breathing exercises for low energy",
+      description:
+        "What to do about the mid-afternoon slump \u2014 including an honest note on when breathing is the wrong tool and a walk outside is the right one.",
+      h1: "Breathing exercises for low energy",
+      intro: [
+        "Start with the honest answer: if you are tired because you slept badly, no breathing pattern is going to substitute for sleep. Daylight, water and a ten-minute walk outside will almost always do more for a 3pm slump than anything on this page.",
+        "That said, there are two things worth trying. Faster breathing genuinely does raise alertness by pushing the sympathetic side of the nervous system \u2014 which is the opposite of everything else on this site, and useful in the right dose. And counterintuitively, slow breathing often leaves people feeling more resourced than fast breathing does, so it is worth testing both on yourself rather than assuming.",
+        "The fast option comes with a longer safety list than anything else here, and it is not decorative. Read it before you start.",
+      ],
+      pickSlug: "coherent-breathing",
+      pickWhy:
+        "Worth trying before the fast option. People frequently report feeling more capable after slow breathing than after energising breathing, and it carries none of the risks.",
+      guides: ["breathing-at-work", "how-breathing-affects-your-body"],
+      caution:
+        "Fast breathing lowers carbon dioxide, which narrows blood vessels in the brain and can cause light-headedness, tingling and fainting. Sit down for it \u2014 never standing, never driving, and never in or near water. Skip it entirely if you are pregnant or have epilepsy, uncontrolled high blood pressure, a heart condition, glaucoma, a history of fainting or panic disorder.",
+    },
   },
   {
     id: 'pain',
@@ -120,6 +246,24 @@ export const ISSUES: Issue[] = [
     question: 'In pain or discomfort?',
     blurb: 'Soft, slow breathing used in pain clinics and during labour.',
     icon: 'heart',
+    landing: {
+      slug: "pain",
+      title: "Breathing exercises for pain and discomfort",
+      description:
+        "Slow, soft breathing patterns used in pain clinics, during procedures and in labour. Free and guided, with honest limits on what they do.",
+      h1: "Breathing exercises for pain",
+      intro: [
+        "Breathing does not remove pain. What it can do is change your relationship to it for a while, and interrupt the reflex that makes it worse: when something hurts, most people hold their breath and tense up, which amplifies both the sensation and the distress around it.",
+        "This is why slow controlled breathing turns up during wound dressing changes, injections, dental work and labour. It gives you something to do with your attention, and it stops the breath-holding. Those are modest mechanisms, and they are real.",
+        "Keep it slow and soft rather than deep. If a long count makes you tense, shorten it \u2014 the aim is for the breathing itself to require no effort.",
+      ],
+      pickSlug: "pursed-lip-breathing",
+      pickWhy:
+        "Breathing out through pursed lips gives you a slow, controlled exhale with something physical to focus on, which is easier to hold on to than a count when you are uncomfortable.",
+      guides: ["getting-started", "how-long-should-a-session-be"],
+      caution:
+        "New, severe or unexplained pain needs a clinician, not a breathing exercise. This is something to use alongside proper assessment and treatment, never instead of it.",
+    },
   },
   {
     id: 'breath',
@@ -127,6 +271,24 @@ export const ISSUES: Issue[] = [
     question: 'Short of breath?',
     blurb: 'Techniques taught in pulmonary rehab to ease the work of breathing.',
     icon: 'lungs',
+    landing: {
+      slug: "breathlessness",
+      title: "Breathing exercises for breathlessness",
+      description:
+        "Pursed-lip and paced breathing taught in pulmonary rehabilitation to ease the work of breathing. Free and guided, with clear emergency guidance.",
+      h1: "Breathing exercises for breathlessness",
+      intro: [
+        "Breathing out through narrowed lips creates a small back-pressure in the airways. In people with COPD and some other lung conditions, that back-pressure helps keep floppy airways open long enough to actually empty the lungs, which reduces the trapped air behind the feeling of breathlessness.",
+        "It is one of the first things taught in pulmonary rehabilitation, and it is also useful for anyone who gets breathless with exertion or with anxiety \u2014 which are harder to tell apart in the moment than you would expect.",
+        "The trick is to use it while moving, not only while sitting. Breathe in before the effort \u2014 standing up, lifting, climbing stairs \u2014 and breathe out through pursed lips during the effort itself.",
+      ],
+      pickSlug: "pursed-lip-breathing",
+      pickWhy:
+        "The technique itself, as taught in pulmonary rehab. Two seconds in through the nose, four to six out through pursed lips, without forcing the air.",
+      guides: ["getting-started", "how-breathing-affects-your-body"],
+      caution:
+        "Sudden or severe breathlessness, chest pain, blue lips or confusion are medical emergencies \u2014 call your local emergency number rather than doing a breathing exercise. If you have a diagnosed lung condition, ask your respiratory team or physiotherapist to check your technique; this site is general information, not a rehabilitation programme.",
+    },
   },
   {
     id: 'beginner',
@@ -134,6 +296,22 @@ export const ISSUES: Issue[] = [
     question: 'Never done this before?',
     blurb: 'Start here. Nothing to learn, nothing to hold, nothing to get wrong.',
     icon: 'seed',
+    landing: {
+      slug: "beginners",
+      title: "Breathing exercises for beginners",
+      description:
+        "Where to start if you have never done a breathing exercise: the one rule that matters, what the first session feels like, and three techniques to try.",
+      h1: "Breathing exercises for beginners",
+      intro: [
+        "There is nothing to learn, buy or believe. Controlled breathing means deliberately changing the speed or rhythm of your breath for a few minutes, and the only rule that really matters is this: make the out-breath longer than the in-breath.",
+        "Everything else is variation. Four in and six out. Four in and eight out. Five and a half each way. The ratios differ; the principle does not.",
+        "The most common beginner mistake is breathing too deeply. Deep effortful breathing often makes people feel light-headed and slightly panicky, which is the opposite of the point. Aim for slow and comfortable \u2014 if you finish an out-breath gasping for the next one, the count is too long for you today.",
+      ],
+      pickSlug: "belly-breathing",
+      pickWhy:
+        "The foundation every other technique is built on, and the hardest one to get wrong. No holds, no fast breathing, suitable during pregnancy.",
+      guides: ["getting-started", "how-long-should-a-session-be"],
+    },
   },
 ];
 
@@ -907,6 +1085,14 @@ export const TECHNIQUES: Technique[] = [
 
 export function getTechnique(slug: string): Technique | undefined {
   return TECHNIQUES.find((t) => t.slug === slug);
+}
+
+export function getIssue(id: string): Issue | undefined {
+  return ISSUES.find((i) => i.id === id);
+}
+
+export function getIssueBySlug(slug: string): Issue | undefined {
+  return ISSUES.find((i) => i.landing.slug === slug);
 }
 
 export function techniquesForIssue(issue: IssueId): Technique[] {

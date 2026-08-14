@@ -749,7 +749,15 @@ a.card:hover .card-go svg {
 }
 @media (min-width: 760px) {
   .footer-cols {
-    grid-template-columns: 1.6fr repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .footer-cols > :first-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 1100px) {
+  .footer-cols {
+    grid-template-columns: 1.5fr repeat(5, minmax(0, 1fr));
   }
   .footer-cols > :first-child {
     grid-column: auto;
@@ -1710,4 +1718,18 @@ thead th {
   background: var(--bg-sunk);
   border: 1px solid var(--line);
   word-break: break-word;
+}
+
+/* The "start with this one" block on an issue landing page — the single
+   recommendation should look different from the grid of thirteen options. */
+.pick {
+  background: var(--bg-tint);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  margin-block: var(--s-7);
+  max-width: 46rem;
+}
+.pick h2 {
+  margin-top: 0;
 }

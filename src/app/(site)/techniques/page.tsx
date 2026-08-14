@@ -3,7 +3,7 @@ import Link from 'next/link';
 import AdSlot from '@/components/AdSlot';
 import Reveal from '@/components/Reveal';
 import TechniqueFilter from '@/components/TechniqueFilter';
-import { ISSUES, TECHNIQUES, type IssueId } from '@/lib/techniques';
+import { ISSUES, TECHNIQUES, techniquesForIssue } from '@/lib/techniques';
 
 export const metadata: Metadata = {
   title: 'All breathing techniques, by what you need',
@@ -12,14 +12,11 @@ export const metadata: Metadata = {
   alternates: { canonical: '/techniques' },
 };
 
-export default async function TechniquesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ for?: string }>;
-}) {
-  const params = await searchParams;
-  const initial = ISSUES.find((i) => i.id === params.for)?.id as IssueId | undefined;
-
+/* No searchParams: the filter is client-side state, and reading a query
+   parameter here forced the whole page to render dynamically on every request
+   for no benefit. The nine situation pages below are the crawlable, linkable
+   version of the same filter. */
+export default function TechniquesPage() {
   return (
     <>
       <section className="wrap section">
@@ -31,8 +28,36 @@ export default async function TechniquesPage({
             the lot — each one is honest about who should skip it.
           </p>
         </div>
-        <TechniqueFilter initial={initial} />
+        <TechniqueFilter />
       </section>
+
+      <Reveal as="section" className="wrap section-tight">
+        <div className="section-head">
+          <span className="eyebrow">By situation</span>
+          <h2>Pick by what you are dealing with</h2>
+          <p>
+            Each of these has its own page, with the techniques that suit it and what to know before
+            you start.
+          </p>
+        </div>
+        <div className="grid">
+          {ISSUES.map((issue) => (
+            <Link
+              key={issue.id}
+              className="card"
+              href={`/breathing-exercises-for/${issue.landing.slug}`}
+            >
+              <h3>{issue.landing.h1}</h3>
+              <p className="small muted" style={{ marginBottom: 0 }}>
+                {issue.blurb}
+              </p>
+              <span className="card-go">
+                {techniquesForIssue(issue.id).length} techniques →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </Reveal>
 
       <AdSlot placement="article" />
 
