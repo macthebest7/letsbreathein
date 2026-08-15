@@ -40,9 +40,16 @@ console.log(`\nCHECKING ${BASE}\n`);
 console.log('SITEMAP');
 try {
   const { res, body } = await get(`${BASE}/sitemap.xml`);
-  res.status === 200
-    ? pass('HTTP 200')
-    : fail('HTTP status', `${res.status} ${res.statusText}`);
+  if (res.status === 200) {
+    pass('HTTP 200');
+  } else if (res.status >= 300 && res.status < 400) {
+    // The destination is the whole diagnosis: a redirect to the www host means
+    // Vercel has www set as primary, which conflicts with every canonical tag
+    // and with the hostnames inside the sitemap itself.
+    fail('HTTP status', `${res.status} → ${res.headers.get('location') ?? 'no Location header'}`);
+  } else {
+    fail('HTTP status', `${res.status} ${res.statusText}`);
+  }
 
   const ct = res.headers.get('content-type') ?? '';
   /xml/i.test(ct) ? pass('Content-Type is XML', ct) : fail('Content-Type', ct || 'missing');
@@ -56,23 +63,27 @@ try {
     : fail('missing <urlset> or namespace');
 
   const locs = [...body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-  locs.length > 0 ? pass(`${locs.length} URLs`) : fail('no <loc> entries');
-  locs.length <= 50000 ? pass('under the 50,000 URL limit') : fail('over 50,000 URLs');
-
-  const wrongHost = locs.filter((u) => new URL(u).hostname !== host);
-  wrongHost.length === 0
-    ? pass('every URL is on the canonical host', host)
-    : fail('URLs on a different host', wrongHost.slice(0, 3).join(', '));
-
-  const insecure = locs.filter((u) => !u.startsWith('https://'));
-  insecure.length === 0 ? pass('every URL is HTTPS') : fail('non-HTTPS URLs', insecure[0]);
-
-  const bad = locs.filter((u) => /localhost|127\.0\.0\.1|example\.com|vercel\.app/.test(u));
-  bad.length === 0
-    ? pass('no localhost / staging / placeholder URLs')
-    : fail('bad URLs present', bad.slice(0, 3).join(', '));
-
   globalThis.__locs = locs;
+
+  if (locs.length === 0) {
+    fail('no <loc> entries', 'skipping URL checks — there is nothing to check');
+  } else {
+    pass(`${locs.length} URLs`);
+    locs.length <= 50000 ? pass('under the 50,000 URL limit') : fail('over 50,000 URLs');
+
+    const wrongHost = locs.filter((u) => new URL(u).hostname !== host);
+    wrongHost.length === 0
+      ? pass('every URL is on the canonical host', host)
+      : fail('URLs on a different host', wrongHost.slice(0, 3).join(', '));
+
+    const insecure = locs.filter((u) => !u.startsWith('https://'));
+    insecure.length === 0 ? pass('every URL is HTTPS') : fail('non-HTTPS URLs', insecure[0]);
+
+    const bad = locs.filter((u) => /localhost|127\.0\.0\.1|example\.com|vercel\.app/.test(u));
+    bad.length === 0
+      ? pass('no localhost / staging / placeholder URLs')
+      : fail('bad URLs present', bad.slice(0, 3).join(', '));
+  }
 } catch (e) {
   fail('could not fetch the sitemap', String(e));
   globalThis.__locs = [];
@@ -82,7 +93,9 @@ try {
 console.log('\nROBOTS');
 try {
   const { res, body } = await get(`${BASE}/robots.txt`);
-  res.status === 200 ? pass('HTTP 200') : fail('HTTP status', String(res.status));
+  res.status === 200
+    ? pass('HTTP 200')
+    : fail('HTTP status', `${res.status}${res.headers.get('location') ? ` → ${res.headers.get('location')}` : ''}`);
   const ct = res.headers.get('content-type') ?? '';
   /text\/plain/i.test(ct) ? pass('Content-Type is text/plain', ct) : fail('Content-Type', ct);
 
@@ -124,6 +137,7 @@ for (const variant of [`https://www.${host}`, `http://${host}`]) {
 console.log('\nSAMPLE PAGES FROM THE SITEMAP');
 const locs = globalThis.__locs ?? [];
 const sample = [locs[0], locs[1], locs[Math.floor(locs.length / 2)], locs.at(-1)].filter(Boolean);
+if (sample.length === 0) fail('no pages to sample', 'the sitemap returned no URLs');
 for (const url of sample) {
   try {
     const { res, body } = await get(url, { redirect: 'manual' });
