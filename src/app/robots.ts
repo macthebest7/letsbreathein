@@ -14,6 +14,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [{ userAgent: '*', allow: '/' }],
     sitemap: `${SITE.url}/sitemap.xml`,
-    host: SITE.url,
+    // No `host:` — that is a Yandex extension, not part of the robots.txt
+    // standard, and Google ignores it. The canonical host is declared properly
+    // via canonical tags and the www → apex redirect.
   };
 }

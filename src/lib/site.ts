@@ -20,13 +20,33 @@ function resolveSiteUrl(): string {
   // Tolerate a value pasted without a scheme ("letsbreathein.fit").
   const candidate = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
   try {
-    // .origin normalises away any trailing slash or stray path, so canonical
+    const url = new URL(candidate);
+    // The apex is the canonical host and www 308s to it. If the env var is ever
+    // set to the www host, every canonical and every sitemap URL would point at
+    // a host that immediately redirects — Google treats a sitemap full of
+    // redirecting URLs as an error, and a sitemap served from one host listing
+    // URLs on another is rejected outright. Strip it and the mismatch is
+    // impossible regardless of what is configured.
+    url.hostname = url.hostname.replace(/^www\./i, '');
+    // .origin also normalises away a trailing slash or stray path, so canonical
     // URLs never end up doubled ("https://site.com//about").
-    return new URL(candidate).origin;
+    return url.origin;
   } catch {
     return FALLBACK_URL;
   }
 }
+
+/**
+ * The date the site's content was last meaningfully revised.
+ *
+ * Used as `lastmod` for pages that do not carry their own date. Deliberately a
+ * constant rather than `new Date()`: generating it at build time tells Google
+ * that all 45 pages changed on every deploy, including deploys that only
+ * touched CSS. Google's guidance is that `lastmod` should reflect real content
+ * change, and it discounts the signal from sites where the value is obviously
+ * automatic. Bump this when you actually revise content.
+ */
+export const CONTENT_UPDATED = '2026-08-15';
 
 const DEFAULT_EMAIL = 'broleymaverick@gmail.com';
 

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { SITE } from '@/lib/site';
+import { CONTENT_UPDATED, SITE } from '@/lib/site';
 import { ISSUES, TECHNIQUES } from '@/lib/techniques';
 import { GUIDES } from '@/lib/guides';
 
@@ -9,7 +9,7 @@ import { GUIDES } from '@/lib/guides';
  * technique article is the canonical page for that content.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const revised = new Date(`${CONTENT_UPDATED}T00:00:00Z`);
 
   const pages: { path: string; priority: number; freq: 'weekly' | 'monthly' | 'yearly' }[] = [
     { path: '', priority: 1, freq: 'weekly' },
@@ -30,19 +30,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...pages.map((p) => ({
       url: `${SITE.url}${p.path}`,
-      lastModified: now,
+      lastModified: revised,
       changeFrequency: p.freq,
       priority: p.priority,
     })),
     ...TECHNIQUES.map((t) => ({
       url: `${SITE.url}/techniques/${t.slug}`,
-      lastModified: now,
+      lastModified: revised,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     })),
     ...ISSUES.map((i) => ({
       url: `${SITE.url}/breathing-exercises-for/${i.landing.slug}`,
-      lastModified: now,
+      lastModified: revised,
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     })),

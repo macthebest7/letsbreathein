@@ -48,6 +48,18 @@ node tools/check-contrast.mjs     # WCAG contrast for every pair in all 3 themes
 node tools/check-adsense.mjs      # the automated half of ADSENSE-CHECKLIST.md
 ```
 
+### After every deploy
+
+```bash
+node tools/check-live.mjs         # hits the live site as Googlebot
+```
+
+This is the only check that can see what a crawler actually gets: status codes,
+`Content-Type` headers, redirect chains, whether `www` and `http` redirect to the
+apex, and whether pages in the sitemap render their `h1` and canonical without
+JavaScript. It exits non-zero on failure, so it can gate a deploy. Point it at a
+preview URL with `node tools/check-live.mjs https://your-preview.vercel.app`.
+
 `check-contrast.mjs` exits non-zero if any pair drops below AA, so it can go in CI. The
 accessibility page quotes its numbers directly — if you change a colour token, re-run it and update
 that page rather than leaving a claim that is no longer true.
