@@ -121,27 +121,61 @@ try {
 
 /* ---------------- hostname behaviour ---------------- */
 console.log('\nHOSTNAMES');
-/* Every non-canonical variant must redirect to the canonical host, not serve a
+
+/* Google follows up to five redirect hops, so a chain is fine as long as it is
+ * short and ends in the right place. `http://apex` legitimately takes two hops
+ * — the platform upgrades http→https first, then apex→www — so checking only
+ * the first Location header reports a false failure. Walk the whole chain. */
+const MAX_HOPS = 5;
+
+async function followChain(start) {
+  const chain = [];
+  let url = start;
+  for (let i = 0; i < MAX_HOPS + 1; i++) {
+    const res = await fetch(url, { redirect: 'manual', headers: { 'user-agent': 'Googlebot' } });
+    if (res.status < 300 || res.status >= 400) return { chain, final: url, status: res.status };
+    const loc = res.headers.get('location');
+    if (!loc) return { chain, final: url, status: res.status, noLocation: true };
+    // Location may legitimately be relative.
+    const next = new URL(loc, url).href;
+    if (chain.some((h) => h.to === next) || next === url) {
+      return { chain, final: next, status: res.status, loop: true };
+    }
+    chain.push({ from: url, to: next, status: res.status });
+    url = next;
+  }
+  return { chain, final: url, status: 0, tooLong: true };
+}
+
+/* Every non-canonical variant must end up on the canonical host, not serve a
  * copy of the site. Two hosts both answering 200 means two crawlable copies of
  * all 45 pages, which splits ranking signals and reads as duplicate content. */
 for (const variant of [`https://${apex}`, `http://${apex}`, `http://${host}`]) {
   try {
-    const res = await fetch(variant, { redirect: 'manual', headers: { 'user-agent': 'Googlebot' } });
-    const loc = res.headers.get('location') ?? '';
-    if (res.status >= 300 && res.status < 400 && loc.includes(host)) {
-      pass(`${variant} redirects to the canonical host`, `${res.status} → ${loc}`);
-    } else if (res.status === 200) {
-      fail(`${variant} serves content instead of redirecting`, 'duplicate host — fix in Vercel → Domains');
-    } else if (res.status >= 300 && res.status < 400) {
-      fail(`${variant} redirects somewhere else`, `${res.status} → ${loc || 'no Location header'}`);
+    const { chain, final, status, loop, tooLong, noLocation } = await followChain(variant);
+    const hops = chain.map((h) => h.status).join(' → ');
+    const arrow = chain.length ? `${hops} → ${final}` : `${status} ${final}`;
+
+    if (loop) {
+      fail(`${variant}`, `REDIRECT LOOP — ${arrow}`);
+    } else if (tooLong) {
+      fail(`${variant}`, `more than ${MAX_HOPS} redirects — ${arrow}`);
+    } else if (noLocation) {
+      fail(`${variant}`, `${status} with no Location header`);
+    } else if (chain.length === 0) {
+      status === 200
+        ? fail(`${variant} serves content instead of redirecting`, 'duplicate host — fix in Vercel → Domains')
+        : fail(`${variant}`, `HTTP ${status}, no redirect`);
+    } else if (new URL(final).hostname === host && new URL(final).protocol === 'https:') {
+      pass(`${variant} → canonical host in ${chain.length} hop${chain.length > 1 ? 's' : ''}`, arrow);
     } else {
-      fail(`${variant}`, `${res.status} → ${loc || 'no Location header'}`);
+      fail(`${variant} ends somewhere else`, arrow);
     }
   } catch (e) {
-    // A plain connection failure on the http variants is usually the DNS
-    // provider not answering on port 80 rather than a site fault. Worth
-    // knowing, but it is not what breaks the sitemap.
-    fail(`${variant}`, String(e).includes('redirect') ? 'REDIRECT LOOP' : String(e));
+    // A plain connection failure on an http variant is usually the DNS provider
+    // not answering on port 80 rather than a site fault. Worth knowing, but it
+    // is not what breaks the sitemap.
+    fail(`${variant}`, String(e));
   }
 }
 
