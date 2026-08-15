@@ -10,8 +10,12 @@
  * Exits non-zero on failure, so it can gate a deploy.
  */
 
-const BASE = (process.argv[2] ?? 'https://letsbreathein.fit').replace(/\/$/, '');
-const host = new URL(BASE).hostname.replace(/^www\./, '');
+/* The canonical host is the www one — it is what Vercel serves as primary, and
+ * src/lib/site.ts builds every canonical URL from it. `apex` is the host that
+ * must redirect here, and is checked separately below. */
+const BASE = (process.argv[2] ?? 'https://www.letsbreathein.fit').replace(/\/$/, '');
+const host = new URL(BASE).hostname;
+const apex = host.replace(/^www\./, '');
 
 let failures = 0;
 const pass = (label, detail = '') => console.log(`  PASS  ${label}${detail ? `  — ${detail}` : ''}`);
@@ -43,9 +47,9 @@ try {
   if (res.status === 200) {
     pass('HTTP 200');
   } else if (res.status >= 300 && res.status < 400) {
-    // The destination is the whole diagnosis: a redirect to the www host means
-    // Vercel has www set as primary, which conflicts with every canonical tag
-    // and with the hostnames inside the sitemap itself.
+    // The destination is the whole diagnosis. The sitemap must be served, not
+    // redirected: Google will not follow a redirect from a submitted sitemap
+    // URL to a different host, and a 308 here returns text/plain, never XML.
     fail('HTTP status', `${res.status} → ${res.headers.get('location') ?? 'no Location header'}`);
   } else {
     fail('HTTP status', `${res.status} ${res.statusText}`);
@@ -117,18 +121,26 @@ try {
 
 /* ---------------- hostname behaviour ---------------- */
 console.log('\nHOSTNAMES');
-for (const variant of [`https://www.${host}`, `http://${host}`]) {
+/* Every non-canonical variant must redirect to the canonical host, not serve a
+ * copy of the site. Two hosts both answering 200 means two crawlable copies of
+ * all 45 pages, which splits ranking signals and reads as duplicate content. */
+for (const variant of [`https://${apex}`, `http://${apex}`, `http://${host}`]) {
   try {
     const res = await fetch(variant, { redirect: 'manual', headers: { 'user-agent': 'Googlebot' } });
     const loc = res.headers.get('location') ?? '';
-    if (res.status >= 300 && res.status < 400 && loc.includes(host) && !loc.includes(`www.${host}`)) {
-      pass(`${variant} redirects to the apex`, `${res.status} → ${loc}`);
+    if (res.status >= 300 && res.status < 400 && loc.includes(host)) {
+      pass(`${variant} redirects to the canonical host`, `${res.status} → ${loc}`);
     } else if (res.status === 200) {
       fail(`${variant} serves content instead of redirecting`, 'duplicate host — fix in Vercel → Domains');
+    } else if (res.status >= 300 && res.status < 400) {
+      fail(`${variant} redirects somewhere else`, `${res.status} → ${loc || 'no Location header'}`);
     } else {
       fail(`${variant}`, `${res.status} → ${loc || 'no Location header'}`);
     }
   } catch (e) {
+    // A plain connection failure on the http variants is usually the DNS
+    // provider not answering on port 80 rather than a site fault. Worth
+    // knowing, but it is not what breaks the sitemap.
     fail(`${variant}`, String(e).includes('redirect') ? 'REDIRECT LOOP' : String(e));
   }
 }

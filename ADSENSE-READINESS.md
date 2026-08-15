@@ -85,9 +85,10 @@ This is the highest-risk category for a breathing site, and it was audited line 
    obvious one — then set `NEXT_PUBLIC_CONTACT_EMAIL`. It is commented out in `.env.local` ready to
    uncomment. Until it is set, `/contact` displays a notice saying the site has no contact address
    yet. **This is the single biggest blocker** — AdSense checks that a human is reachable.
-2. ~~Set `NEXT_PUBLIC_SITE_URL`~~ — done: `https://letsbreathein.fit`. Set the same variable in
-   your host's dashboard, and make sure **www 301s to the apex** (or vice versa) so the site is not
-   crawlable on two hosts.
+2. ~~Set `NEXT_PUBLIC_SITE_URL`~~ — done: `https://www.letsbreathein.fit`. The **www host is
+   canonical**, matching Vercel's primary domain, and the bare apex 308s to it, so the site is not
+   crawlable on two hosts. `src/lib/site.ts` forces the www form even if the dashboard variable is
+   set to the apex, so the two cannot drift apart. Verify with `node tools/check-live.mjs`.
 3. **Replace the GoDaddy "Launching Soon" holding page** currently on the domain, then let Search
    Console index a good number of pages before applying. A parked page is thin content, so do not
    apply while it is still up.

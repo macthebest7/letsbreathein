@@ -12,7 +12,24 @@
  * /_not-found". Hence the parsing and validation below rather than `??`.
  */
 
-const FALLBACK_URL = 'https://letsbreathein.fit';
+/**
+ * ⚠️ The canonical host is the **www** host, and that is not cosmetic.
+ *
+ * Vercel serves this project with `www.letsbreathein.fit` as the primary
+ * domain and 308s the bare apex to it. A sitemap served from one host but
+ * listing URLs on another is rejected by Google outright, and canonical tags
+ * pointing at a host that immediately redirects are discarded — which is
+ * exactly what happened: Search Console reported "Couldn't fetch" for weeks
+ * because `https://letsbreathein.fit/sitemap.xml` answered `308 → www`, with
+ * `Content-Type: text/plain`, and never returned any XML at all.
+ *
+ * So the rule is: whatever host the hosting platform actually answers on, this
+ * value must match it exactly. Do not "tidy" the www away. If you ever flip
+ * Vercel's primary domain back to the apex, change WWW_HOST to false in the
+ * same commit — and run `node tools/check-live.mjs` after it deploys.
+ */
+const CANONICAL_HOST = 'www.letsbreathein.fit';
+const FALLBACK_URL = `https://${CANONICAL_HOST}`;
 
 function resolveSiteUrl(): string {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -21,13 +38,12 @@ function resolveSiteUrl(): string {
   const candidate = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
   try {
     const url = new URL(candidate);
-    // The apex is the canonical host and www 308s to it. If the env var is ever
-    // set to the www host, every canonical and every sitemap URL would point at
-    // a host that immediately redirects — Google treats a sitemap full of
-    // redirecting URLs as an error, and a sitemap served from one host listing
-    // URLs on another is rejected outright. Strip it and the mismatch is
-    // impossible regardless of what is configured.
-    url.hostname = url.hostname.replace(/^www\./i, '');
+    // Force the www form. If the env var is ever set to the bare apex — easy to
+    // do by accident, it is how the domain is written everywhere else — every
+    // canonical and every sitemap URL would point at a host that immediately
+    // redirects. Normalising here makes that mismatch impossible regardless of
+    // what is configured in the dashboard.
+    if (!/^www\./i.test(url.hostname)) url.hostname = `www.${url.hostname}`;
     // .origin also normalises away a trailing slash or stray path, so canonical
     // URLs never end up doubled ("https://site.com//about").
     return url.origin;
@@ -83,10 +99,10 @@ export const AUTHOR = {
 export const SITE = {
   name: 'Breathe',
   /**
-   * Apex domain, no www. Pick one host and stick to it: every canonical URL,
-   * the sitemap and the OG image URLs are built from this, so if the site is
-   * reachable on both www and apex, one of them must 301 to the other or you
-   * end up with two crawlable copies of every page.
+   * The www host — see resolveSiteUrl above for why. Every canonical URL, the
+   * sitemap, robots.txt and the OG image URLs are built from this one value, so
+   * changing it moves the whole site's identity at once. The other host must
+   * always redirect to this one, never serve a copy.
    */
   url: resolveSiteUrl(),
   email: resolveEmail(),

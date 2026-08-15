@@ -3,14 +3,18 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   /**
-   * NOTE: the www → apex redirect deliberately lives in Vercel's domain
-   * settings, NOT here.
+   * NOTE: there is deliberately no host redirect in this file.
    *
-   * A host redirect in this file plus a domain-level redirect in Vercel can
-   * point at each other and produce an infinite loop that takes the whole site
-   * down — which is exactly what happened on 15 Aug 2026. Configure the
-   * redirect in exactly one place: Vercel → Settings → Domains → set
-   * www.letsbreathein.fit to Redirect to letsbreathein.fit (308).
+   * The apex → www redirect lives in Vercel's domain settings and nowhere else.
+   * A host redirect here plus a domain-level redirect in Vercel can point at
+   * each other and produce an infinite loop that takes the whole site down —
+   * which is exactly what happened on 15 Aug 2026, when this file redirected
+   * www → apex while Vercel was redirecting apex → www.
+   *
+   * Vercel's current setting: www.letsbreathein.fit is the primary domain and
+   * the bare apex 308s to it. src/lib/site.ts is built to match. Do not add a
+   * redirect here to "fix" a host problem — fix it in Vercel → Domains, then
+   * run `node tools/check-live.mjs` to confirm.
    */
   async headers() {
     return [

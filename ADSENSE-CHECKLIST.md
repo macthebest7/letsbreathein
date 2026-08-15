@@ -89,7 +89,9 @@ All linked from the footer on every page.
       keyboard control, reduced-motion support, live regions
 - [ ] ⬜ **Deploy and remove GoDaddy's "Launching Soon" page.** Do not apply while it is up — a
       parked page is thin content.
-- [ ] ⬜ **301 `www` → apex**, or you have two crawlable copies of all 45 pages
+- [x] ✅ **One canonical host** — `www.letsbreathein.fit` is Vercel's primary and the apex 308s
+      to it, so there are not two crawlable copies of all 45 pages. Verified by
+      `tools/check-live.mjs`.
 - [ ] ⬜ **Search Console**: add the property, submit the sitemap, wait for real indexing before
       applying
 
@@ -121,14 +123,22 @@ All linked from the footer on every page.
 
 ## Post-deploy spot checks
 
+Run `node tools/check-live.mjs` — it does all of these against the live site and exits
+non-zero on failure. By hand:
+
 ```
-/sitemap.xml   → 32 URLs, all letsbreathein.fit
-/robots.txt    → allows all, references the sitemap
+/sitemap.xml   → 200, Content-Type XML, 45 URLs, all on www.letsbreathein.fit
+/robots.txt    → 200, allows all, references the sitemap on the same host
 /ads.txt       → 404 before approval, one google.com line after
 /contact       → broleymaverick@gmail.com is shown
-view-source    → canonical is letsbreathein.fit, not example.com
-www.…          → 301 to apex
+view-source    → canonical is www.letsbreathein.fit, not example.com
+letsbreathein.fit (apex) → 308 to the www host
 ```
+
+⚠️ The canonical host is **www.letsbreathein.fit**, matching Vercel's primary domain.
+A mismatch between this and the host in the sitemap is what caused Search Console to
+report "Couldn't fetch" for weeks. If you ever change Vercel's primary domain, change
+`CANONICAL_HOST` in `src/lib/site.ts` in the same commit.
 
 ## What no checklist can fix
 
