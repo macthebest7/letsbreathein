@@ -247,6 +247,38 @@ try {
   warn('could not compare browser response', String(e));
 }
 
+/* ---------------- content-encoding negotiation ---------------- */
+console.log('\nCONTENT-ENCODING NEGOTIATION');
+/* A server that returns an encoding the client did not ask for hands that
+ * client compressed bytes it cannot decompress — which looks exactly like a
+ * corrupt file. Google's sitemap fetcher is not always the same HTTP client as
+ * Googlebot, so it is worth checking each case explicitly rather than assuming
+ * that "it works in my terminal" generalises. */
+const ALLOWED = {
+  identity: ['', 'identity'],
+  gzip: ['', 'identity', 'gzip'],
+  'gzip, deflate': ['', 'identity', 'gzip', 'deflate'],
+  'gzip, deflate, br': ['', 'identity', 'gzip', 'deflate', 'br'],
+};
+for (const [ae, ok] of Object.entries(ALLOWED)) {
+  try {
+    const r = await fetch(TARGET, {
+      headers: { 'user-agent': UA_BOT, accept: '*/*', 'accept-encoding': ae },
+    });
+    const ce = (r.headers.get('content-encoding') ?? '').toLowerCase().trim();
+    if (ok.includes(ce)) {
+      pass(`Accept-Encoding: ${ae}`, `→ ${ce || 'identity'}`);
+    } else {
+      fail(
+        `Accept-Encoding: ${ae} → server sent ${ce}`,
+        'the client cannot decode this — it would report a corrupt file',
+      );
+    }
+  } catch (e) {
+    warn(`Accept-Encoding: ${ae}`, String(e));
+  }
+}
+
 /* ---------------- robots.txt agreement ---------------- */
 console.log('\nROBOTS AGREEMENT');
 try {
