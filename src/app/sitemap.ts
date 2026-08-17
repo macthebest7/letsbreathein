@@ -12,12 +12,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const revised = new Date(`${CONTENT_UPDATED}T00:00:00Z`);
 
   const pages: { path: string; priority: number; freq: 'weekly' | 'monthly' | 'yearly' }[] = [
-    /* '/' not '': the home page's canonical tag resolves to
-     * "https://host/" (Next builds it from metadataBase + '/'), so an empty
-     * path here would put "https://host" in the sitemap and make the two
-     * strings disagree on the one page that matters most. Same resource,
-     * but there is no reason to hand Google an ambiguity to resolve. */
-    { path: '/', priority: 1, freq: 'weekly' },
+    /* '' not '/', and this is verified against the live HTML, not assumed.
+     *
+     * Next.js normalises metadata URLs: with `trailingSlash` false (the
+     * default, and what this project uses), `alternates: { canonical: '/' }`
+     * renders as "https://host" with NO trailing slash — even though plain
+     * `new URL('/', 'https://host')` gives "https://host/". Do not reason
+     * about this from URL semantics; the framework overrides them.
+     *
+     * So an empty path is what matches the canonical tag exactly. Changing
+     * this to '/' on 17 Aug 2026 introduced a real mismatch that
+     * `tools/check-live.mjs` caught on the next deploy. */
+    { path: '', priority: 1, freq: 'weekly' },
     { path: '/techniques', priority: 0.9, freq: 'monthly' },
     { path: '/guides', priority: 0.9, freq: 'monthly' },
     { path: '/how-it-works', priority: 0.7, freq: 'monthly' },

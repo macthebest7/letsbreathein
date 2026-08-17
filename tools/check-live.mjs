@@ -198,7 +198,12 @@ for (const url of sample) {
     const problems = [];
     if (noindex) problems.push('NOINDEX');
     if (!canonical) problems.push('no canonical');
-    else if (canonical !== url && canonical !== `${url}/`) problems.push(`canonical mismatch: ${canonical}`);
+    /* Strict equality. This used to also accept `${url}/`, which seemed
+     * harmless — the two strings are the same resource — but that leniency
+     * hid a real bug: the sitemap listed the home page without a trailing
+     * slash while its canonical tag carried one, and this check reported
+     * PASS for weeks. If they differ, say so and let a human decide. */
+    else if (canonical !== url) problems.push(`canonical mismatch: sitemap "${url}" vs page "${canonical}"`);
     if (!h1) problems.push('no h1 in raw HTML (needs JS?)');
     problems.length === 0
       ? pass(path, `h1: "${h1?.slice(0, 40)}"`)
