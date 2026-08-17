@@ -12,7 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const revised = new Date(`${CONTENT_UPDATED}T00:00:00Z`);
 
   const pages: { path: string; priority: number; freq: 'weekly' | 'monthly' | 'yearly' }[] = [
-    { path: '', priority: 1, freq: 'weekly' },
+    /* '/' not '': the home page's canonical tag resolves to
+     * "https://host/" (Next builds it from metadataBase + '/'), so an empty
+     * path here would put "https://host" in the sitemap and make the two
+     * strings disagree on the one page that matters most. Same resource,
+     * but there is no reason to hand Google an ambiguity to resolve. */
+    { path: '/', priority: 1, freq: 'weekly' },
     { path: '/techniques', priority: 0.9, freq: 'monthly' },
     { path: '/guides', priority: 0.9, freq: 'monthly' },
     { path: '/how-it-works', priority: 0.7, freq: 'monthly' },
