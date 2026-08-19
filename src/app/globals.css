@@ -1733,3 +1733,22 @@ thead th {
 .pick h2 {
   margin-top: 0;
 }
+
+/* The orb sits beside the start button on the situation landing pages, so the
+   page reads as something you do rather than something you read. Single
+   column on narrow screens with the orb on top — it is the thing that draws
+   the eye and explains the page without any copy. */
+.pick-live {
+  display: grid;
+  gap: var(--s-5);
+  align-items: center;
+}
+.pick-live .orb-stage {
+  width: min(48vw, 10rem);
+}
+@media (min-width: 40rem) {
+  .pick-live {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: var(--s-6);
+  }
+}

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import AdSlot from '@/components/AdSlot';
+import HeroOrb from '@/components/HeroOrb';
 import Reveal from '@/components/Reveal';
 import TechniqueCard from '@/components/TechniqueCard';
 import { ISSUES, getIssueBySlug, getTechnique, techniquesForIssue } from '@/lib/techniques';
@@ -82,28 +83,32 @@ export default async function IssueLandingPage({ params }: Params) {
           <p className="lede">{i.blurb}</p>
         </div>
 
-        <div className="prose">
-          {i.landing.intro.map((p, n) => (
-            <p key={n}>{p}</p>
-          ))}
-        </div>
-
+        {/* The session comes BEFORE the reading.
+            Someone arriving from "breathing exercises for panic attacks" is
+            not here to read 250 words first — they are here to do the thing.
+            The orb is a live, silent demonstration, so the page announces
+            itself as something you do rather than an article about it. */}
         {pick && (
           <section className="pick" aria-labelledby="pick-h">
-            <div>
-              <span className="eyebrow">Start with</span>
-              <h2 id="pick-h" style={{ marginBottom: 'var(--s-3)' }}>
-                {pick.name}
-              </h2>
-              <p className="muted" style={{ marginBottom: 'var(--s-4)' }}>
-                {i.landing.pickWhy}
-              </p>
-              <Link className="btn btn-primary btn-lg" href={`/breathe/${pick.slug}`}>
-                Start {pick.defaultMinutes}-minute session
-              </Link>
-              <p className="small muted" style={{ marginTop: 'var(--s-3)', marginBottom: 0 }}>
-                Or <Link href={`/techniques/${pick.slug}`}>read how it works first</Link>.
-              </p>
+            <div className="pick-live">
+              <HeroOrb />
+              <div>
+                <span className="eyebrow">Do it here, now</span>
+                <h2 id="pick-h" style={{ marginBottom: 'var(--s-3)' }}>
+                  {pick.name}
+                </h2>
+                <p className="muted" style={{ marginBottom: 'var(--s-4)' }}>
+                  {i.landing.pickWhy}
+                </p>
+                <Link className="btn btn-primary btn-lg" href={`/breathe/${pick.slug}`}>
+                  Start {pick.defaultMinutes}-minute session
+                </Link>
+                <p className="small muted" style={{ marginTop: 'var(--s-3)', marginBottom: 0 }}>
+                  A voice counts you through it, with a tone that rises and falls with the
+                  breath. Free, nothing to install.{' '}
+                  <Link href={`/techniques/${pick.slug}`}>Read how it works first</Link>.
+                </p>
+              </div>
             </div>
           </section>
         )}
@@ -114,6 +119,13 @@ export default async function IssueLandingPage({ params }: Params) {
             <p style={{ marginBottom: 0 }}>{i.landing.caution}</p>
           </div>
         )}
+
+        {/* The explanation now sits after the session, for people who want it. */}
+        <div className="prose">
+          {i.landing.intro.map((p, n) => (
+            <p key={n}>{p}</p>
+          ))}
+        </div>
 
         <section className="section-tight">
           <div className="section-head">

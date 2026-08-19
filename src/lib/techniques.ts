@@ -102,9 +102,9 @@ export const ISSUES: Issue[] = [
     icon: 'briefcase',
     landing: {
       slug: "stress",
-      title: "Breathing exercises for stress at work",
+      title: "Guided breathing exercises for stress at work",
       description:
-        "Discreet breathing exercises you can do at a desk, in an open-plan office, or in the two minutes between meetings. Free, guided, no account.",
+        "Press start and follow the circle \u2014 a voice and a soft tone guide every breath. Discreet enough for a desk. Free, no account, nothing to install.",
       h1: "Breathing exercises for stress",
       intro: [
         "Work stress has an awkward shape. It is low-grade rather than dramatic, it lasts all day rather than arriving in a spike, and you are usually surrounded by people. Most relaxation advice assumes a quiet room and twenty spare minutes, which is not what a Wednesday afternoon looks like.",
@@ -125,9 +125,9 @@ export const ISSUES: Issue[] = [
     icon: 'wave',
     landing: {
       slug: "anxiety",
-      title: "Breathing exercises for anxiety",
+      title: "Guided breathing exercises for anxiety",
       description:
-        "Slow breathing patterns with a longer out-breath, for anxious or on-edge feelings. Free and guided, with honest notes on what breathing can and cannot do.",
+        "Follow a slow breath with a longer out-breath, guided on screen by voice and sound. Starts in one tap \u2014 free, no sign-up, honest about the limits.",
       h1: "Breathing exercises for anxiety",
       intro: [
         "When you are anxious your breathing usually gets faster, shallower and higher in the chest without you deciding anything. Slowing it down deliberately is one of the few levers you have over a system that otherwise runs on its own.",
@@ -150,9 +150,9 @@ export const ISSUES: Issue[] = [
     icon: 'anchor',
     landing: {
       slug: "panic-attacks",
-      title: "Breathing exercises for panic attacks",
+      title: "Guided breathing exercises for panic attacks",
       description:
-        "A simple, slow breathing anchor for panic and overwhelm \u2014 nothing to count, nothing to hold. Plus what to do when breathing is not enough.",
+        "Nothing to count or remember \u2014 press start and follow the voice and the circle. Works with your eyes closed. Free, instant, no sign-up.",
       h1: "Breathing exercises for panic attacks",
       intro: [
         "During a panic attack, complicated instructions are useless. Anything that requires you to remember a four-part pattern is going to fail exactly when you need it. So the technique below has no counting to keep track of, no breath-holding, and no way to get it wrong.",
@@ -175,9 +175,9 @@ export const ISSUES: Issue[] = [
     icon: 'moon',
     landing: {
       slug: "sleep",
-      title: "Breathing exercises for sleep",
+      title: "Guided breathing exercises for sleep",
       description:
-        "Wind-down breathing patterns designed to be done lying in the dark, with the screen dimmed and the end chime off. Free and guided.",
+        "Start a wind-down session you can follow lying in the dark \u2014 screen dimmed, voice low, end chime off. Free, guided, nothing to install.",
       h1: "Breathing exercises for sleep",
       intro: [
         "Lying awake compounds itself: the longer you are awake the more frustrating it gets, and frustration is not compatible with falling asleep. Slow breathing helps with the second half of that problem more than the first.",
@@ -200,9 +200,9 @@ export const ISSUES: Issue[] = [
     icon: 'target',
     landing: {
       slug: "focus",
-      title: "Breathing exercises for focus and concentration",
+      title: "Guided breathing exercises for focus",
       description:
-        "Steady, even breathing rhythms used before deep work, exams and presentations. Free guided sessions with voice and sound.",
+        "A guided reset before deep work, exams or presentations. Follow the circle and the voice for two minutes. Free, no account, runs in the browser.",
       h1: "Breathing exercises for focus",
       intro: [
         "The value here is less about the breathing than about the transition. Most people move from email to deep work with no boundary at all, carrying the last twelve interruptions into the thing that needs uninterrupted attention. Three minutes of a fixed pattern makes a boundary where there was not one.",
@@ -223,9 +223,9 @@ export const ISSUES: Issue[] = [
     icon: 'spark',
     landing: {
       slug: "low-energy",
-      title: "Breathing exercises for low energy",
+      title: "Guided breathing exercises for low energy",
       description:
-        "What to do about the mid-afternoon slump \u2014 including an honest note on when breathing is the wrong tool and a walk outside is the right one.",
+        "Guided breathing for the afternoon slump, followed on screen with voice and sound \u2014 plus an honest note on when a walk outside works better.",
       h1: "Breathing exercises for low energy",
       intro: [
         "Start with the honest answer: if you are tired because you slept badly, no breathing pattern is going to substitute for sleep. Daylight, water and a ten-minute walk outside will almost always do more for a 3pm slump than anything on this page.",
@@ -248,9 +248,9 @@ export const ISSUES: Issue[] = [
     icon: 'heart',
     landing: {
       slug: "pain",
-      title: "Breathing exercises for pain and discomfort",
+      title: "Guided breathing exercises for pain",
       description:
-        "Slow, soft breathing patterns used in pain clinics, during procedures and in labour. Free and guided, with honest limits on what they do.",
+        "Slow, soft breathing guided on screen by voice and tone, as used in pain clinics and labour. Free to follow along, with honest limits on what it does.",
       h1: "Breathing exercises for pain",
       intro: [
         "Breathing does not remove pain. What it can do is change your relationship to it for a while, and interrupt the reflex that makes it worse: when something hurts, most people hold their breath and tense up, which amplifies both the sensation and the distress around it.",
@@ -273,9 +273,9 @@ export const ISSUES: Issue[] = [
     icon: 'lungs',
     landing: {
       slug: "breathlessness",
-      title: "Breathing exercises for breathlessness",
+      title: "Guided breathing exercises for breathlessness",
       description:
-        "Pursed-lip and paced breathing taught in pulmonary rehabilitation to ease the work of breathing. Free and guided, with clear emergency guidance.",
+        "Follow pursed-lip and paced breathing on screen, guided by voice and sound, as taught in pulmonary rehab. Free, with clear emergency guidance.",
       h1: "Breathing exercises for breathlessness",
       intro: [
         "Breathing out through narrowed lips creates a small back-pressure in the airways. In people with COPD and some other lung conditions, that back-pressure helps keep floppy airways open long enough to actually empty the lungs, which reduces the trapped air behind the feeling of breathlessness.",
@@ -298,9 +298,9 @@ export const ISSUES: Issue[] = [
     icon: 'seed',
     landing: {
       slug: "beginners",
-      title: "Breathing exercises for beginners",
+      title: "Guided breathing exercises for beginners",
       description:
-        "Where to start if you have never done a breathing exercise: the one rule that matters, what the first session feels like, and three techniques to try.",
+        "Never done one before? Press start and follow the circle \u2014 the voice says when to breathe in, out and hold. Free, three minutes, no account.",
       h1: "Breathing exercises for beginners",
       intro: [
         "There is nothing to learn, buy or believe. Controlled breathing means deliberately changing the speed or rhythm of your breath for a few minutes, and the only rule that really matters is this: make the out-breath longer than the in-breath.",
