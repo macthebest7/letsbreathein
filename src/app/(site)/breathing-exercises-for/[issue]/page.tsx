@@ -101,7 +101,7 @@ export default async function IssueLandingPage({ params }: Params) {
                   {i.landing.pickWhy}
                 </p>
                 <Link className="btn btn-primary btn-lg" href={`/breathe/${pick.slug}`}>
-                  Start {pick.defaultMinutes}-minute session
+                  Breathe with me — {pick.defaultMinutes} minutes
                 </Link>
                 <p className="small muted" style={{ marginTop: 'var(--s-3)', marginBottom: 0 }}>
                   A voice counts you through it, with a tone that rises and falls with the

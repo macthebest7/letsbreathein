@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import AdSlot from '@/components/AdSlot';
+import HeroOrb from '@/components/HeroOrb';
 import Reveal from '@/components/Reveal';
 import TechniqueCard from '@/components/TechniqueCard';
 import { SITE } from '@/lib/site';
@@ -21,17 +22,40 @@ export function generateStaticParams() {
   return TECHNIQUES.map((t) => ({ slug: t.slug }));
 }
 
+/**
+ * Tool-first titles, sized to fit.
+ *
+ * "Belly Breathing — how to do it" reads as an article, and against Healthline
+ * or the NHS that is a fight this site loses on authority. What it actually
+ * offers is the session itself, so the title says so.
+ *
+ * Technique names range from 12 to 27 characters, so a single fixed suffix
+ * either wastes room on short names or overflows on long ones. Pick the
+ * longest suffix that still fits: Google shows roughly 60 characters and the
+ * layout template appends " | Breathe" (10), leaving a 50-character budget.
+ */
+const TITLE_SUFFIXES = [
+  ' — guided timer with voice',
+  ' — guided timer, free',
+  ' — guided timer',
+] as const;
+const TITLE_BUDGET = 60 - ' | Breathe'.length;
+
+function toolTitle(name: string): string {
+  const fit = TITLE_SUFFIXES.find((s) => name.length + s.length <= TITLE_BUDGET);
+  return fit ? `${name}${fit}` : name;
+}
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const t = getTechnique(slug);
   if (!t) return {};
   return {
-    // Titles are kept under ~52 characters so the " | Breathe" suffix still
-    // fits inside Google's ~60-character display limit. The alternative names
-    // used to sit in the title and pushed several past 90 characters, which
-    // meant the useful half was cut off in results. They now live in the
-    // description and on the page instead, where they still carry semantically.
-    title: `${t.name} — how to do it`,
+    // See toolTitle above for the length budget. The alternative names used to
+    // sit in the title and pushed several past 90 characters, so the useful
+    // half was cut off in results. They live in the description and on the
+    // page instead, where they still carry semantically.
+    title: toolTitle(t.name),
     description: t.summary,
     alternates: { canonical: `/techniques/${t.slug}` },
     openGraph: { title: t.name, description: t.summary, type: 'article' },
@@ -88,17 +112,31 @@ export default async function TechniquePage({ params }: Params) {
           {t.name}
         </nav>
 
+        {/* Tool first, article second.
+            The orb is already breathing before anyone clicks, so the page
+            shows what it is instead of describing it. The explanation of the
+            pattern, the evidence and the cautions all still follow below —
+            this changes the order, not the substance. */}
         <header className="article-head">
-          <h1>{t.name}</h1>
-          <p className="lede">{t.tagline}</p>
-          <p className="meta-row">
-            <span className="tag">{t.level}</span>
-            <span>{t.bpm}</span>
-            {t.aka && <span>Also called {t.aka}</span>}
-          </p>
-          <Link className="btn btn-primary btn-lg" href={`/breathe/${t.slug}`}>
-            Start guided session
-          </Link>
+          <div className="pick-live">
+            <HeroOrb />
+            <div>
+              <h1>{t.name}</h1>
+              <p className="lede">{t.tagline}</p>
+              <p className="meta-row">
+                <span className="tag">{t.level}</span>
+                <span>{t.bpm}</span>
+                {t.aka && <span>Also called {t.aka}</span>}
+              </p>
+              <Link className="btn btn-primary btn-lg" href={`/breathe/${t.slug}`}>
+                Breathe with me — {t.defaultMinutes} minutes
+              </Link>
+              <p className="small muted" style={{ marginTop: 'var(--s-3)', marginBottom: 0 }}>
+                A voice counts every phase and a tone rises and falls with the breath, so it
+                works with your eyes closed. Free, no account.
+              </p>
+            </div>
+          </div>
         </header>
 
         <div className="prose">
@@ -163,7 +201,7 @@ export default async function TechniquePage({ params }: Params) {
             long since scrolled away. */}
         <div className="start-bar">
           <Link className="btn btn-primary btn-lg" href={`/breathe/${t.slug}`}>
-            Start {t.defaultMinutes}-minute session
+            Breathe with me — {t.defaultMinutes} minutes
           </Link>
         </div>
       </article>
