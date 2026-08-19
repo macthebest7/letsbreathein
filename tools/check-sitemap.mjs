@@ -163,14 +163,25 @@ else pass('tags balanced, response not truncated');
 /* ---------------- sitemap protocol ---------------- */
 console.log('\nSITEMAP PROTOCOL');
 
-const nsMatch = text.match(/<urlset[^>]*xmlns\s*=\s*"([^"]+)"/i);
-if (!nsMatch) fail('no <urlset> with an xmlns attribute');
+/* A sitemap index uses <sitemapindex>/<sitemap> instead of <urlset>/<url>.
+ * Same namespace, same lastmod rules, but no priority or changefreq. Detect it
+ * so submitting an index does not report a confusing pile of failures. */
+const isIndex = /<sitemapindex[\s>]/i.test(text);
+if (isIndex) console.log('  INFO  this is a sitemap INDEX, not a URL set');
+
+const rootTag = isIndex ? 'sitemapindex' : 'urlset';
+const entryTag = isIndex ? 'sitemap' : 'url';
+
+const nsMatch = text.match(new RegExp(`<${rootTag}[^>]*xmlns\\s*=\\s*"([^"]+)"`, 'i'));
+if (!nsMatch) fail(`no <${rootTag}> with an xmlns attribute`);
 else if (nsMatch[1] !== 'http://www.sitemaps.org/schemas/sitemap/0.9')
   fail('wrong namespace', nsMatch[1]);
 else pass('correct sitemaps.org 0.9 namespace');
 
-const urlBlocks = [...text.matchAll(/<url>([\s\S]*?)<\/url>/gi)].map((m) => m[1]);
-urlBlocks.length > 0 ? pass(`${urlBlocks.length} <url> entries`) : fail('no <url> entries');
+const urlBlocks = [
+  ...text.matchAll(new RegExp(`<${entryTag}>([\\s\\S]*?)</${entryTag}>`, 'gi')),
+].map((m) => m[1]);
+urlBlocks.length > 0 ? pass(`${urlBlocks.length} <${entryTag}> entries`) : fail(`no <${entryTag}> entries`);
 urlBlocks.length <= 50000 ? pass('within the 50,000 URL limit') : fail('over 50,000 URLs');
 bytes.length <= 52428800
   ? pass('within the 50 MB uncompressed limit')
@@ -220,7 +231,7 @@ for (const block of urlBlocks) {
   if (cf !== undefined && !FREQS.includes(cf.toLowerCase())) badFreq.push(cf);
 }
 
-missingLoc === 0 ? pass('every <url> has exactly one <loc>') : fail(`${missingLoc} <url> without exactly one <loc>`);
+missingLoc === 0 ? pass(`every <${entryTag}> has exactly one <loc>`) : fail(`${missingLoc} <${entryTag}> without exactly one <loc>`);
 badUrl.length === 0 ? pass('every <loc> is a valid absolute URL on one host', firstHost ?? '') : fail(`${badUrl.length} bad <loc>`, badUrl.slice(0, 3).join(', '));
 badLastmod.length === 0 ? pass('every <lastmod> is a valid W3C datetime') : fail(`${badLastmod.length} bad <lastmod>`, badLastmod.slice(0, 3).join(', '));
 badPriority.length === 0 ? pass('every <priority> is between 0.0 and 1.0') : fail(`${badPriority.length} bad <priority>`, badPriority.slice(0, 3).join(', '));
